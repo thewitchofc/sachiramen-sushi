@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="מסעדת ראמן וסושי בתל אביב, משלוחים מהירים, חוויה יפנית אותנטית"
+    />
+    <title>Sachi Ramen &amp; Sushi תל אביב</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Heebo:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preload" as="image" href="/hero-bg.jpg" />
+    <style>
+      /* Page loader — critical; mirrors global.css until bundle CSS loads */
+      .loader {
+        position: fixed;
+        inset: 0;
+        background: #f5f1e6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 1;
+        transition: opacity 0.5s ease;
+      }
+      .loader-logo {
+        width: 90px;
+        max-width: 25vw;
+        height: auto;
+        animation: logoFloat 2.2s ease-in-out infinite alternate;
+      }
+      @keyframes logoFloat {
+        from {
+          transform: translateY(0) scale(0.97);
+          opacity: 0.82;
+        }
+        to {
+          transform: translateY(-4px) scale(1);
+          opacity: 1;
+        }
+      }
+      .loader.hide {
+        opacity: 0;
+        pointer-events: none;
+      }
+      @media (min-width: 768px) {
+        .loader-logo {
+          width: 110px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="page-loader"
+      class="loader"
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+      aria-label="טוען"
+    >
+      <img
+        class="loader-logo"
+        src="/logo-sachi.png"
+        alt="לוגו Sachi Ramen &amp; Sushi — טוען"
+        width="120"
+        height="120"
+        decoding="async"
+      />
+    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
