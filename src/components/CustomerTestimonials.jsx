@@ -24,8 +24,8 @@ export function CustomerTestimonials() {
               viewBox="0 0 24 24"
               width={24}
               height={24}
-              role="img"
-              aria-label="לוגו Google"
+              aria-hidden="true"
+              focusable="false"
             >
               <path
                 fill="#4285F4"

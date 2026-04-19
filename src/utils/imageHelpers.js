@@ -9,16 +9,31 @@ function menuImageStem(fullPath) {
   return m ? m[1] : null;
 }
 
-/** srcSet לרשת רספונסיבית: 640 / 960 / מקור (גלריה PNG) */
-export function localPngSrcSet(fullPath) {
-  if (!fullPath.endsWith(".png")) return undefined;
-  const stem = fullPath.slice(0, -4);
-  return `${stem}-640.png 640w, ${stem}-960.png 960w, ${fullPath} 1024w`;
+function galleryWebpStem(fullPath) {
+  if (!String(fullPath).endsWith(".webp")) return null;
+  return fullPath.replace(/\.webp$/i, "");
 }
 
-export function localPngDefaultSrc(fullPath) {
-  if (!fullPath.endsWith(".png")) return fullPath;
-  return fullPath.replace(/\.png$/, "-960.png");
+/** גלריה — ‎WebP + נגזרות ‎-640 / ‎-960 (+‎-480 ל־gallery-11) */
+export function localGalleryWebpSrcSet(fullPath) {
+  const stem = galleryWebpStem(fullPath);
+  if (!stem) return undefined;
+  const parts = [];
+  if (/\/gallery-11$/i.test(stem)) {
+    parts.push(`${stem}-480.webp 480w`);
+  }
+  parts.push(
+    `${stem}-640.webp 640w`,
+    `${stem}-960.webp 960w`,
+    `${fullPath} 1024w`
+  );
+  return parts.join(", ");
+}
+
+export function localGalleryWebpDefaultSrc(fullPath) {
+  const stem = galleryWebpStem(fullPath);
+  if (!stem) return fullPath;
+  return `${stem}-960.webp`;
 }
 
 /** תמונות תפריט: ברירת מחדל ‎480px, מקור לרזולוציה גבוהה */

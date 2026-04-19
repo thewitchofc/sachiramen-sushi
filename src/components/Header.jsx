@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, matchPath, useLocation } from "react-router-dom";
 import { LOGO_SRC, navLinks, WOLT_URL } from "../data/siteContent.js";
 
 export function Header() {
@@ -56,6 +56,8 @@ export function Header() {
             width={206}
             height={66}
             decoding="async"
+            loading="eager"
+            fetchPriority="high"
           />
         </Link>
         <nav className="nav" aria-label="ניווט ראשי">
@@ -63,18 +65,22 @@ export function Header() {
             id="nav-menu"
             className={`nav-list${menuOpen ? " is-open" : ""}`}
           >
-            {navLinks.map(({ to, label, end }) => (
-              <li key={to}>
-                <NavLink
-                  to={to}
-                  end={Boolean(end)}
-                  onClick={closeMenu}
-                  className={({ isActive }) => (isActive ? "is-active" : undefined)}
-                >
-                  {label}
-                </NavLink>
-              </li>
-            ))}
+            {navLinks.map(({ to, label, end }) => {
+              const isActive =
+                matchPath({ path: to, end: Boolean(end) }, pathname) != null;
+              return (
+                <li key={to}>
+                  <Link
+                    to={to}
+                    onClick={closeMenu}
+                    className={isActive ? "is-active" : undefined}
+                    aria-current={isActive ? "page" : undefined}
+                  >
+                    {label}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </nav>
         <button
@@ -95,6 +101,7 @@ export function Header() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="הזמן עכשיו ב-Wolt"
+          data-track-order="header"
         >
           הזמן עכשיו
         </a>

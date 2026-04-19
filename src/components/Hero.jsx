@@ -21,11 +21,12 @@ export function Hero() {
       <div className="hero-bg" aria-hidden="true">
         <img
           src={HERO_BG_SRC}
-          alt="תמונת רקע: אווירת המסעדה"
+          alt=""
           width={1024}
           height={682}
           decoding="async"
           fetchPriority="high"
+          loading="eager"
         />
       </div>
       <div className="hero-overlay" aria-hidden="true" />
@@ -43,6 +44,7 @@ export function Hero() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="הזמן עכשיו ב-Wolt"
+            data-track-order="hero"
           >
             הזמן עכשיו
           </a>
@@ -58,7 +60,7 @@ export function Hero() {
           className="hero-brand-secondary hero-subtitle"
           dir="ltr"
           lang="en"
-          aria-label="Brand"
+          aria-label="סלוגן המותג Sachi באנגלית"
         >
           <p className="hero-brand-hook">{brandVoice.hook}</p>
           <p className="hero-brand-line">{brandVoice.line}</p>

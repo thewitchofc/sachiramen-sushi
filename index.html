@@ -6,9 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="מסעדת ראמן וסושי בתל אביב, משלוחים מהירים, חוויה יפנית אותנטית"
+      content="סאצ'י ראמן וסושי — מסעדת ראמן וסושי בדיזנגוף 98 תל אביב. גלם טרי, משלוחים ב-Wolt, שעות פתיחה ויצירת קשר."
     />
-    <title>Sachi Ramen &amp; Sushi תל אביב</title>
+    <meta
+      name="keywords"
+      content="סאצ'י, סאצי, ראמן תל אביב, סושי תל אביב, מסעדה דיזנגוף, דיזנגוף 98, ראמן יפני, סושי טרי, Sachi Ramen, Sushi Tel Aviv"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Sachi Ramen &amp; Sushi" />
+    <meta name="theme-color" content="#f5f1e6" />
+    <meta name="geo.region" content="IL-TA" />
+    <meta name="geo.placename" content="תל אביב-יפו" />
+    <title>סאצ'י ראמן וסושי · Sachi Ramen &amp; Sushi · דיזנגוף תל אביב</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -16,6 +25,8 @@
       rel="stylesheet"
     />
     <link rel="preload" as="image" href="/hero-bg.jpg" />
+    <link rel="preload" as="image" href="/logo-sachi.webp" type="image/webp" />
+    <!-- GA4: סקריפטי gtag נוספים ל-head בזמן build כשהוגדר VITE_GA_MEASUREMENT_ID (ראו vite.config.js) -->
     <style>
       /* Page loader — critical; mirrors global.css until bundle CSS loads */
       .loader {
@@ -67,11 +78,13 @@
     >
       <img
         class="loader-logo"
-        src="/logo-sachi.png"
+        src="/logo-sachi.webp"
         alt="לוגו Sachi Ramen &amp; Sushi — טוען"
         width="120"
         height="120"
+        fetchpriority="high"
         decoding="async"
+        loading="eager"
       />
     </div>
     <div id="root"></div>

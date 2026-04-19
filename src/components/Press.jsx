@@ -5,9 +5,9 @@ export function Press() {
     <section className="section press-section" id="press" aria-labelledby="press-heading">
       <div className="container">
         <p className="section-eyebrow">בתקשורת</p>
-        <h2 className="section-title" id="press-heading">
+        <h1 className="section-title" id="press-heading">
           כתבו עלינו
-        </h2>
+        </h1>
         <div className="press-grid">
           {pressArticles.map((article) => (
             <article className="press-card" key={article.href}>

@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "optimize:menu-images": "node scripts/optimize-menu-images.mjs"
+    "optimize:menu-images": "node scripts/optimize-menu-images.mjs",
+    "optimize:public-rasters": "node scripts/optimize-public-rasters.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

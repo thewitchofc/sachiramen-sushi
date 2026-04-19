@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { menuCategories, WOLT_URL } from "../data/siteContent.js";
 import { useMatchMobileMenu } from "../hooks/useMatchMobileMenu.js";
 import { MenuCategoryStickyNav } from "./MenuCategoryStickyNav.jsx";
@@ -19,11 +19,12 @@ function remoteMenuSrcSet(src) {
   return [line(480), line(720), line(960)].join(", ");
 }
 
-function MenuItemRow({ item }) {
+function MenuItemRow({ item, dishTitleLevel = "category" }) {
   const navigate = useNavigate();
   const isMobile = useMatchMobileMenu();
   const dishId = getMenuItemId(item);
   const canOpenDish = Boolean(isMobile && dishId);
+  const TitleTag = dishTitleLevel === "subsection" ? "h5" : "h4";
 
   const handleCardClick = (e) => {
     if (!canOpenDish) return;
@@ -54,7 +55,7 @@ function MenuItemRow({ item }) {
       onKeyDown={handleCardKeyDown}
       tabIndex={canOpenDish ? 0 : undefined}
       role={canOpenDish ? "link" : undefined}
-      aria-label={canOpenDish ? `פרטי מנה: ${item.name}` : undefined}
+      aria-label={canOpenDish ? `מעבר לעמוד מנה: ${item.name}` : undefined}
     >
       <div
         className={
@@ -77,7 +78,7 @@ function MenuItemRow({ item }) {
                 : menuThumbSrcSet(item.image)
             }
             sizes="(min-width: 769px) 160px, 100vw"
-            alt={`תמונת מנה: ${item.name}`}
+            alt={canOpenDish ? "" : item.name}
             width={480}
             height={270}
             loading="lazy"
@@ -88,7 +89,7 @@ function MenuItemRow({ item }) {
       <div className="menu-item-text">
         <div className="menu-item-heading">
           <div className="menu-item-title-wrap">
-            <h4>{item.name}</h4>
+            <TitleTag className="menu-item__title">{item.name}</TitleTag>
             {(showVeg || showSpicy) ? (
               <span className="menu-item-icon-tags" aria-hidden="true">
                 {showVeg ? (
@@ -119,7 +120,7 @@ function MenuItemRow({ item }) {
             ) : null}
           </div>
         </div>
-        <p>{item.desc}</p>
+        <p className="menu-card-description">{item.desc}</p>
       </div>
     </li>
   );
@@ -129,9 +130,17 @@ export function MenuSection() {
   return (
     <section className="section menu-section section--light" id="menu">
       <div className="container">
+        <h1 className="visually-hidden">
+          תפריט — סאצ&apos;י ראמן וסושי, דיזנגוף 98 תל אביב
+        </h1>
         <MenuMostOrdered />
         <p className="section-eyebrow">התפריט</p>
         <h2 className="section-title menu-section__title">תפריט מלא</h2>
+        <p className="menu-allergen-note">
+          <Link to="/allergens">
+            הצהרת אלרגנים ורגישויות — חשוב לקרוא לפני הזמנה
+          </Link>
+        </p>
 
         <MenuCategoryStickyNav />
 
@@ -179,6 +188,7 @@ export function MenuSection() {
                             {subItems.map((item) => (
                               <MenuItemRow
                                 key={`${cat.title}-${sub.title}-${item.name}-${item.price ?? item.priceDisplay ?? ""}-${(item.tags ?? []).join(",")}`}
+                                dishTitleLevel="subsection"
                                 item={item}
                               />
                             ))}
@@ -210,6 +220,7 @@ export function MenuSection() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="הזמן עכשיו ב-Wolt"
+            data-track-order="menu_mid"
           >
             הזמן עכשיו
           </a>

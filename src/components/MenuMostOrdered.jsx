@@ -11,7 +11,7 @@ export function MenuMostOrdered() {
       <h2 className="menu-popular__title">המוזמנים ביותר</h2>
       <ul className="menu-popular__grid">
         {mostOrderedDishes.map((item) => (
-          <li className="menu-popular-card" key={item.title}>
+          <li className="menu-card menu-popular-card" key={item.title}>
             <div className="menu-popular-card__media">
               <img
                 src={

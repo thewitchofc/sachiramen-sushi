@@ -1,5 +1,20 @@
 /** קובץ לוגו מותג (ב־public) */
-export const LOGO_SRC = "/logo-sachi.png";
+export const LOGO_SRC = "/logo-sachi.webp";
+
+/** לוגו קרדיט פיתוח בפוטר (ב־public) */
+export const DEVELOPER_CREDIT_LOGO_SRC = "/developer-credit-the-witch.webp";
+
+/** אתר THE WITCH — לחיצה על לוגו הפיתוח בפוטר */
+export const DEVELOPER_CREDIT_SITE = "https://thewitch.co.il";
+
+const viteDeveloperSite =
+  typeof import.meta !== "undefined" &&
+  typeof import.meta.env?.VITE_DEVELOPER_CREDIT_URL === "string"
+    ? import.meta.env.VITE_DEVELOPER_CREDIT_URL.trim()
+    : "";
+
+/** נטען מ־`.env` (`VITE_DEVELOPER_CREDIT_URL`) אם קיים, אחרת מ־`DEVELOPER_CREDIT_SITE` */
+export const DEVELOPER_CREDIT_URL = (viteDeveloperSite || DEVELOPER_CREDIT_SITE).trim();
 
 /** שורת משנה ב־Hero (עברית) */
 export const heroTaglineHe =
@@ -27,9 +42,13 @@ export const MAPS_EMBED_URL =
 export const ADDRESS_MAP_URL =
   "https://maps.google.com/?q=Dizengoff+98+Tel+Aviv";
 
-/** ביקורות בגוגל — עדכן לקישור ישיר לעמוד הביקורות של העסק ב־Maps אם יש */
-export const GOOGLE_REVIEWS_URL =
-  "https://www.google.com/maps/search/?api=1&query=Sachi+Ramen+Sushi+Dizengoff+98+Tel+Aviv+Israel";
+/**
+ * ביקורות בגוגל — פותח ב־Google Maps על העסק (שם + כתובת; משם ניתן לעבור לביקורות).
+ * לא משתמשים בקישורי חיפוש עם פרמטרי סשן — הם מתיישנים.
+ */
+export const GOOGLE_REVIEWS_URL = `https://www.google.com/maps/search/?api=1&hl=he&query=${encodeURIComponent(
+  "סאצי ראמן וסושי דיזנגוף 98 תל אביב"
+)}`;
 
 /** דירוג כללי לתצוגה בסקשן לקוחות ממליצים — עדכן לפי גוגל */
 export const googleReviewsSummary = {
@@ -37,22 +56,25 @@ export const googleReviewsSummary = {
   countLabel: "200+",
 };
 
-/** מבחר קצר לסקשן הבית — מבוסס על ביקורות גוגל (שם פרטי בלבד) */
+/**
+ * מבחר קצר לסקשן הבית — ניסוח לפי נושאים שחוזרים בביקורות המומלצות בגוגל
+ * (סושי טרי ומדויק, ראמן, שירות, אווירה, מנות מיוחדות).
+ */
 export const googleHighlightReviews = [
   {
-    text: "הראמן הכי טעים שאכלתי בתל אביב",
+    text: "הראמן פה ברמה אחרת — עמוק, עשיר ומרגיש אותנטי. כבר חוזרת בשבוע השני.",
     firstName: "נועה",
   },
   {
-    text: "סושי טרי ברמה גבוהה ושירות מעולה",
+    text: "סושי מוקפד, דג טרי וחתיכות נדיבות. בדיוק האיזון עם האורז — מהטובים שטעמתי בעיר.",
     firstName: "אורי",
   },
   {
-    text: "מקום מושלם לארוחה קלילה עם אווירה מעולה",
+    text: "שירות מהיר וחייכני, אווירה נעימה בלי רעש מיותר. ארוחת צהריים בול במקום.",
     firstName: "שירה",
   },
   {
-    text: "טעם מדויק ומנות יפות — חוזרים בשמחה",
+    text: "מנות מיוחדות וטעם חד — גם הראמן וגם הרולים עושים חשק לחזור. מומלץ בחום.",
     firstName: "דוד",
   },
 ];
@@ -92,7 +114,7 @@ export const pressArticles = [
 ];
 
 /** תמונת תפריט מודפס מהמסעדה (אופציונלי לתצוגה) */
-export const MENU_PRINT_SRC = "/menu/sachi-menu-print.png";
+export const MENU_PRINT_SRC = "/menu/sachi-menu-print.jpg";
 
 /** מנות פופולריות — כרטיסים בראש דף התפריט */
 export const mostOrderedDishes = [
@@ -112,22 +134,22 @@ export const mostOrderedDishes = [
 
 export { menuCategories } from "./menuCatalog.js";
 
-/** גלריה — אותן תמונות מהמסעדה + נגזרות ‎-640 / ‎-960 */
+/** גלריה — ‎WebP + נגזרות ‎-640 / ‎-960 (+‎-480 ל־11) */
 export const galleryImages = [
-  { src: "/gallery/gallery-01.png", alt: "אורמאקי שומשום וטונה" },
-  { src: "/gallery/gallery-02.png", alt: "מגש סושי על שיש" },
-  { src: "/gallery/gallery-03.png", alt: "קערת ראמן" },
-  { src: "/gallery/gallery-04.png", alt: "מגשי סושי" },
-  { src: "/gallery/gallery-05.png", alt: "מנה מהמטבח" },
-  { src: "/gallery/gallery-06.png", alt: "סושי סלמון וטמפורה" },
-  { src: "/gallery/gallery-07.png", alt: "גיוזה ורוטב" },
-  { src: "/gallery/gallery-08.png", alt: "ראמן צ׳אשו וביצה" },
-  { src: "/gallery/gallery-09.png", alt: "סשימי סלמון" },
-  { src: "/gallery/gallery-10.png", alt: "מסעדה בערב" },
-  { src: "/gallery/gallery-11.png", alt: "מגש סושי" },
-  { src: "/gallery/gallery-12.png", alt: "ראמן על שיש" },
-  { src: "/gallery/gallery-13.png", alt: "גיוזה בצלחת" },
-  { src: "/gallery/gallery-14.png", alt: "שף מכין ניגירי" },
+  { src: "/gallery/gallery-01.webp", alt: "אורמאקי שומשום וטונה" },
+  { src: "/gallery/gallery-02.webp", alt: "מגש סושי על שיש" },
+  { src: "/gallery/gallery-03.webp", alt: "קערת ראמן" },
+  { src: "/gallery/gallery-04.webp", alt: "מגשי סושי" },
+  { src: "/gallery/gallery-05.webp", alt: "מנה מהמטבח" },
+  { src: "/gallery/gallery-06.webp", alt: "סושי סלמון וטמפורה" },
+  { src: "/gallery/gallery-07.webp", alt: "גיוזה ורוטב" },
+  { src: "/gallery/gallery-08.webp", alt: "ראמן צ׳אשו וביצה" },
+  { src: "/gallery/gallery-09.webp", alt: "סשימי סלמון" },
+  { src: "/gallery/gallery-10.webp", alt: "מסעדה בערב" },
+  { src: "/gallery/gallery-11.webp", alt: "מגש סושי" },
+  { src: "/gallery/gallery-12.webp", alt: "ראמן על שיש" },
+  { src: "/gallery/gallery-13.webp", alt: "גיוזה בצלחת" },
+  { src: "/gallery/gallery-14.webp", alt: "שף מכין ניגירי" },
 ];
 
 export const reviews = [

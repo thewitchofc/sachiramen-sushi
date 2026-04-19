@@ -74,6 +74,8 @@ html {
   scroll-padding-top: calc(var(--header-h) + 0.75rem);
   -webkit-text-size-adjust: 100%;
   overflow-x: clip;
+  /* גלילה רציפה יותר במובייל — פחות “נגרר” מול אלמנטים קבועים */
+  overscroll-behavior-y: contain;
 }
 
 body {
@@ -103,7 +105,8 @@ h2 {
 p {
   font-size: 0.95rem;
   line-height: 1.6;
-  color: #666;
+  /* ניגודיות טקסט ~≥4.5:1 על רקע קרם/לבן */
+  color: #4a4a4a;
 }
 
 body::before {
@@ -123,6 +126,13 @@ body.nav-is-open {
   touch-action: none;
 }
 
+/* תפריט מלא פתוח — FAB ווואטסאפ לא חופפים לקישורי הניווט */
+body.nav-is-open .order-bar,
+body.nav-is-open .wa-maneki {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 #root {
   position: relative;
   z-index: 2;
@@ -130,10 +140,55 @@ body.nav-is-open {
   min-height: 100dvh;
 }
 
-/* נגישות — מיקוד מקלדת */
+/* נגישות — מיקוד מקלדת (מסנן מיקוד עכבר כשהדפדפן תומך ב־:focus-visible) */
 :focus {
-  outline: 2px solid #c00;
+  outline: 2px solid var(--color-red);
   outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-red);
+  outline-offset: 2px;
+}
+
+/* כותרת דף לקוראי מסך בלבד — ללא שינוי פריסה */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* קישור דילוג לתוכן — מוסתר עד פוקוס מקלדת */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  z-index: 10050;
+  padding: 0.5rem 1rem;
+  font-family: var(--font-he);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-ink-on-cream);
+  background: var(--color-cream);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 20px rgba(26, 26, 26, 0.12);
+  text-decoration: none;
+  transition: top 0.15s ease;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 10px;
 }
 
 img {
@@ -155,6 +210,7 @@ a:hover {
 /* Reserve space for sticky order bar on phones */
 .main-content {
   padding-bottom: var(--order-bar-h);
+  scroll-margin-top: calc(var(--header-h) + 0.5rem);
 }
 
 .section-skeleton {
@@ -374,6 +430,7 @@ body.nav-is-open .nav-backdrop {
   flex-shrink: 0;
   border-radius: var(--radius-sm);
   -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s ease;
 }
 
 .nav-toggle span {
@@ -459,6 +516,20 @@ body.nav-is-open .nav-backdrop {
   display: none;
 }
 
+/* ——— אינטראקציות אחידות (מעבר, לחיצה) ——— */
+.menu-card,
+.menu-popular-card,
+.btn,
+.wa-maneki {
+  transition: all 0.2s ease;
+}
+
+.menu-card:active,
+.menu-popular-card:active,
+.btn:active {
+  transform: scale(0.97);
+}
+
 /* ——— Buttons ——— */
 .btn {
   display: inline-flex;
@@ -474,11 +545,11 @@ body.nav-is-open .nav-backdrop {
   border: 1px solid transparent;
   cursor: pointer;
   touch-action: manipulation;
-  transition: all 0.2s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
-.btn:active {
+/* כפתורים מקוריים (לא .btn) — אותה תחושת לחיצה; בלי רקע מסך הניווט */
+button:active:not(.nav-backdrop):not(.btn) {
   transform: scale(0.97);
 }
 
@@ -832,7 +903,7 @@ body.nav-is-open .nav-backdrop {
 }
 
 .btn-hero-cta:focus-visible {
-  outline: 2px solid #c00;
+  outline: 2px solid var(--color-red);
   outline-offset: 3px;
 }
 
@@ -867,7 +938,7 @@ body.nav-is-open .nav-backdrop {
 }
 
 .btn-hero-secondary:focus-visible {
-  outline: 2px solid #c00;
+  outline: 2px solid var(--color-red);
   outline-offset: 3px;
 }
 
@@ -931,6 +1002,7 @@ body.nav-is-open .nav-backdrop {
   background: linear-gradient(180deg, var(--color-gold), transparent);
   opacity: 0.45;
   animation: scroll-hint 2.2s ease-in-out infinite;
+  pointer-events: none;
 }
 
 @keyframes scroll-hint {
@@ -1010,7 +1082,8 @@ section[id] {
   color: var(--color-cream);
 }
 
-.section--dark p,
+/* לא כוללים .testimonial-card__text — אחרת inherit מנצח את .testimonial-card__text (ספציפיות נמוכה יותר) */
+.section--dark p:not(.testimonial-card__text),
 .press-section p {
   color: inherit;
 }
@@ -1042,6 +1115,49 @@ section[id] {
 
 .about-text p:last-child {
   margin-bottom: 0;
+}
+
+/* ——— עמוד תנאי שימוש ——— */
+.legal-page__list {
+  list-style: disc;
+  margin: var(--space-lg) 0 var(--space-xl);
+  padding-inline-start: 1.35rem;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.68;
+}
+
+.legal-page__list li {
+  margin-bottom: var(--space-md);
+}
+
+.legal-page__list li:last-child {
+  margin-bottom: 0;
+}
+
+.section--light .legal-page__list {
+  color: var(--color-ink-muted-on-cream);
+}
+
+.section--light .legal-page__list strong {
+  color: var(--color-ink-on-cream);
+}
+
+.legal-page__subhead {
+  margin: var(--space-xl) 0 var(--space-md);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--color-ink-on-cream);
+}
+
+.legal-page__note {
+  margin-top: var(--space-xl);
+  margin-bottom: 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--color-ink-muted-on-cream);
 }
 
 .about-happy-hour {
@@ -1222,7 +1338,6 @@ section[id] {
 .menu-card {
   position: relative;
   z-index: 1;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 @media (hover: hover) {
@@ -1232,13 +1347,8 @@ section[id] {
   }
 
   .menu-card:active:hover {
-    transform: translateY(-4px) scale(0.98);
+    transform: translateY(-4px) scale(0.97);
   }
-}
-
-.menu-card:active {
-  transform: scale(0.98);
-  background: rgba(0, 0, 0, 0.03);
 }
 
 .menu-popular-card {
@@ -1253,10 +1363,6 @@ section[id] {
   box-shadow:
     0 6px 20px rgba(22, 19, 16, 0.06),
     0 2px 8px rgba(22, 19, 16, 0.04);
-  transition:
-    box-shadow var(--transition),
-    transform var(--transition),
-    border-color var(--transition);
 }
 
 @media (hover: hover) {
@@ -1266,6 +1372,10 @@ section[id] {
       0 12px 28px rgba(22, 19, 16, 0.1),
       0 4px 12px rgba(22, 19, 16, 0.06);
     transform: translateY(-2px);
+  }
+
+  .menu-popular-card:active:hover {
+    transform: translateY(-2px) scale(0.97);
   }
 }
 
@@ -1300,7 +1410,20 @@ section[id] {
 }
 
 .menu-section__title {
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-sm);
+}
+
+.menu-allergen-note {
+  margin: 0 0 var(--space-lg);
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.menu-allergen-note a {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 
 /* ניווט קטגוריות דביק — מתחת ל־header; z-index גבוה מכרטיסי המנות */
@@ -1366,7 +1489,8 @@ section[id] {
     border-color var(--transition),
     background var(--transition),
     color var(--transition),
-    box-shadow var(--transition);
+    box-shadow var(--transition),
+    transform 0.2s ease;
 }
 
 @media (hover: hover) {
@@ -1568,7 +1692,7 @@ section[id] {
   min-width: min(100%, 8rem);
 }
 
-.menu-item-title-wrap h4 {
+.menu-item-title-wrap .menu-item__title {
   margin: 0;
 }
 
@@ -1605,7 +1729,7 @@ section[id] {
   line-height: 1.2;
 }
 
-.menu-item-heading h4 {
+.menu-item-heading .menu-item__title {
   margin: 0;
   flex: 1;
   min-width: min(100%, 10rem);
@@ -1617,7 +1741,7 @@ section[id] {
   line-height: 1.3;
 }
 
-.section--light .menu-item-heading h4 {
+.section--light .menu-item-heading .menu-item__title {
   color: var(--color-ink-on-cream);
 }
 
@@ -1911,6 +2035,10 @@ section[id] {
 
 /* ——— Reviews ——— (.section--light) */
 
+.reviews-google-cta {
+  margin-top: var(--space-xl);
+}
+
 .reviews-grid {
   display: flex;
   flex-direction: column;
@@ -1934,7 +2062,7 @@ section[id] {
 }
 
 .section--light .review-card p {
-  color: var(--color-ink-muted-on-cream);
+  color: var(--color-black);
 }
 
 .section--light .review-card footer {
@@ -2057,6 +2185,7 @@ section[id] {
   position: relative;
   margin: 0;
   padding: var(--space-md) var(--space-lg);
+  color: var(--color-black);
   background: linear-gradient(180deg, #fffef9 0%, #faf7f0 100%);
   border-radius: var(--radius-lg);
   border: 1px solid rgba(212, 160, 23, 0.22);
@@ -2137,7 +2266,7 @@ section[id] {
   margin: 0 0 var(--space-sm);
   font-size: 0.98rem;
   line-height: 1.55;
-  color: var(--color-ink-muted-on-cream);
+  color: var(--color-black);
   font-weight: 400;
 }
 
@@ -2516,6 +2645,77 @@ section[id] {
   color: rgba(26, 26, 26, 0.42);
 }
 
+.footer-updated {
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: rgba(26, 26, 26, 0.38);
+  text-align: center;
+}
+
+.footer-alcohol {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: rgba(26, 26, 26, 0.48);
+  text-align: center;
+}
+
+.footer-alcohol a {
+  color: rgba(26, 26, 26, 0.58);
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.footer-alcohol a:hover {
+  color: rgba(26, 26, 26, 0.75);
+}
+
+.footer-credit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 0.65rem;
+  margin: 0;
+}
+
+.footer-credit__label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: rgba(26, 26, 26, 0.48);
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+}
+
+.footer-credit__logo-link {
+  display: inline-flex;
+  line-height: 0;
+  border-radius: var(--radius-sm);
+  transition:
+    opacity var(--transition),
+    transform 0.2s ease;
+}
+
+.footer-credit__logo-link:hover {
+  opacity: 0.88;
+  transform: scale(1.04);
+}
+
+.footer-credit__logo-link:focus-visible {
+  outline: 2px solid var(--color-red);
+  outline-offset: 3px;
+}
+
+.footer-credit__logo {
+  display: block;
+  height: 2.25rem;
+  width: auto;
+  max-width: 5.5rem;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+}
+
 /* ——— Sticky order bar (mobile-first) ——— */
 .order-bar {
   position: fixed;
@@ -2608,17 +2808,22 @@ section[id] {
 /* ——— וואטסאפ — חתול מלא בלי חיתוך ——— */
 .wa-maneki {
   position: fixed;
-  right: 16px;
+  right: max(12px, env(safe-area-inset-inline-end, 0px));
   bottom: 96px;
   z-index: 9999;
   margin: 0;
-  padding: 0;
+  padding: 8px;
   line-height: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: max(48px, calc(var(--touch-min) * 0.85));
+  min-height: max(48px, calc(var(--touch-min) * 0.85));
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  opacity: 0.85;
-  transition: opacity 0.2s ease;
+  opacity: 1;
 }
 
 .wa-maneki:hover {
@@ -2631,17 +2836,6 @@ section[id] {
   height: auto;
   display: block;
   background: transparent;
-}
-
-@media (max-width: 768px) {
-  .wa-maneki {
-    bottom: 104px;
-  }
-
-  .wa-maneki__img {
-    width: 60px;
-    max-width: 60px;
-  }
 }
 
 /* ——— Tablet & desktop ——— */
@@ -2792,7 +2986,7 @@ section[id] {
     padding: 0;
   }
 
-  .menu-item-heading h4 {
+  .menu-item-heading .menu-item__title {
     font-size: 1.0625rem;
   }
 
@@ -2888,6 +3082,7 @@ section[id] {
     z-index: auto;
     transform: none;
     width: auto;
+    max-width: none;
     min-height: 0;
     padding: 1rem 1.75rem;
     border-radius: 999px;
@@ -2956,6 +3151,21 @@ section[id] {
     --container-pad: 1.4rem;
   }
 
+  html {
+    scroll-padding-bottom: calc(var(--order-bar-h) + 0.75rem);
+  }
+
+  /* FAB — לא יגלוש מתחת לעמודת וואטסאפ; יעד מגע מלא */
+  .fab-order {
+    max-width: min(17rem, calc(100vw - 2.5rem - 5.75rem));
+    min-height: max(3.15rem, var(--touch-min));
+  }
+
+  .menu-cat-nav__btn {
+    min-height: var(--touch-min);
+    padding-inline: 0.88rem;
+  }
+
   .fab-order__label {
     font-size: 0.875rem;
   }
@@ -3003,6 +3213,11 @@ section[id] {
     line-height: 1.72;
   }
 
+  /* פסקאות בתוכן — שורה נוחה יותר לקריאה במסך צר */
+  .main-content p {
+    line-height: 1.5;
+  }
+
   .section {
     padding: 24px 16px;
   }
@@ -3027,14 +3242,6 @@ section[id] {
     flex-direction: column;
     align-items: center;
     gap: 10px;
-  }
-
-  .menu-card {
-    margin-bottom: 12px;
-  }
-
-  .menu-popular__grid {
-    gap: 12px 10px;
   }
 
   .hero-tag,
@@ -3085,13 +3292,19 @@ section[id] {
     margin-top: 0;
   }
 
+  /* פחות עומס ב־Hero; וואטסאפ פחות דומיננטי (מיקום מעל סרגל הזמנה) */
   .btn-hero-secondary {
-    padding: 0.7rem 1.2rem;
-    font-size: 0.95rem;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 22rem;
-    margin-inline: auto;
+    display: none;
+  }
+
+  .wa-maneki {
+    bottom: 104px;
+    opacity: 0.85;
+  }
+
+  .wa-maneki__img {
+    width: 60px;
+    max-width: 60px;
   }
 
   .hero-brand-secondary {
@@ -3173,6 +3386,24 @@ section[id] {
     padding: 1.1rem 1.85rem;
   }
 
+  /* תפריט — פופולריים + רשת 2 עמודות */
+  .menu-popular__grid {
+    gap: 8px;
+  }
+
+  /* כרטיסי «המוזמנים ביותר» — תמונה קומפקטית (~menu-card img) */
+  .menu-popular-card__media {
+    aspect-ratio: auto;
+    height: 80px;
+  }
+
+  .menu-popular-card__media img,
+  .menu-card.menu-popular-card img {
+    height: 80px;
+    width: 100%;
+    object-fit: cover;
+  }
+
   /* תפריט — רשת 2 עמודות, כרטיסים קומפקטיים */
   /* ריווח בין קטגוריות נשלט ע״י .menu-categories gap בלבד */
   .menu-category {
@@ -3188,10 +3419,11 @@ section[id] {
     margin: calc(var(--space-sm) * -0.25) 0 var(--space-md);
   }
 
+  /* רשת מנות מובייל (~menu-grid) */
   .menu-list {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px 10px;
+    gap: 8px;
   }
 
   .menu-item {
@@ -3211,13 +3443,13 @@ section[id] {
 
   .menu-item-media--placeholder {
     aspect-ratio: auto;
-    min-height: 90px;
+    min-height: 80px;
     border-radius: 8px;
   }
 
   .menu-item-media img {
     width: 100%;
-    height: 90px;
+    height: 80px;
     object-fit: cover;
     border-radius: 8px;
   }
@@ -3234,7 +3466,7 @@ section[id] {
     margin-top: 4px;
   }
 
-  .menu-item-heading h4 {
+  .menu-item-heading .menu-item__title {
     font-size: 0.9rem;
     line-height: 1.3;
     margin: 0;
@@ -3242,7 +3474,7 @@ section[id] {
     min-width: 0;
   }
 
-  .menu-item-text p {
+  .menu-card-description {
     display: none;
   }
 
@@ -3304,6 +3536,7 @@ section[id] {
 
   html {
     scroll-behavior: auto;
+    overscroll-behavior-y: auto;
   }
 
   .btn-hero-cta:hover,

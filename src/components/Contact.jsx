@@ -13,7 +13,7 @@ export function Contact() {
     <section className="section contact-section section--dark" id="contact">
       <div className="container">
         <p className="section-eyebrow">בואו לבקר</p>
-        <h2 className="section-title">יצירת קשר</h2>
+        <h1 className="section-title">יצירת קשר</h1>
         <div className="contact-layout">
           <div className="contact-info">
             <dl className="contact-list">
@@ -48,6 +48,7 @@ export function Contact() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="הזמן ב-Wolt"
+              data-track-order="contact"
             >
               הזמן ב-Wolt
             </a>

@@ -1,4 +1,6 @@
+import { useEffect, useRef } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
+import { trackDishPageEnter } from "../analytics/gaEvents.js";
 import { getMenuItemById } from "../data/menuIndex.js";
 import { WOLT_URL } from "../data/siteContent.js";
 import { isRemoteImageUrl, menuThumbSrcSet } from "../utils/imageHelpers.js";
@@ -15,6 +17,15 @@ function remoteMenuHeroSrcSet(src) {
 export default function DishPage() {
   const { dishId } = useParams();
   const item = dishId ? getMenuItemById(dishId) : null;
+  const dishTrackedRef = useRef("");
+
+  useEffect(() => {
+    if (!dishId || !item?.name) return;
+    const key = `${dishId}`;
+    if (dishTrackedRef.current === key) return;
+    dishTrackedRef.current = key;
+    trackDishPageEnter(dishId, item.name);
+  }, [dishId, item?.name]);
 
   if (!item) {
     return <Navigate to="/menu" replace />;
@@ -54,7 +65,7 @@ export default function DishPage() {
                   : menuThumbSrcSet(item.image)
               }
               sizes="100vw"
-              alt={`תמונת מנה: ${item.name}`}
+              alt={item.name}
               width={1024}
               height={576}
               loading="lazy"
@@ -78,6 +89,7 @@ export default function DishPage() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="הזמן עכשיו ב-Wolt"
+            data-track-order="dish_page"
           >
             הזמן עכשיו
           </a>

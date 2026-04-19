@@ -10,6 +10,7 @@ export function WoltCtaBand() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="הזמן עכשיו ב-Wolt"
+          data-track-order="wolt_band"
         >
           הזמן עכשיו ב-Wolt
         </a>

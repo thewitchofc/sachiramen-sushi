@@ -1,8 +1,8 @@
 import { galleryImages } from "../data/siteContent.js";
 import {
   isRemoteImageUrl,
-  localPngDefaultSrc,
-  localPngSrcSet,
+  localGalleryWebpDefaultSrc,
+  localGalleryWebpSrcSet,
 } from "../utils/imageHelpers.js";
 
 function remoteGallerySrcSet(src) {
@@ -19,13 +19,13 @@ export function Gallery() {
     <section className="section gallery-section section--dark" id="gallery">
       <div className="container">
         <p className="section-eyebrow">רגעים מהמטבח</p>
-        <h2 className="section-title">גלריה</h2>
+        <h1 className="section-title">גלריה</h1>
         <div className="gallery-grid bleed-x">
           {galleryImages.map((img) => {
             const remote = isRemoteImageUrl(img.src);
             const src = remote
               ? img.src.replace(/w=\d+/, "w=960")
-              : localPngDefaultSrc(img.src);
+              : localGalleryWebpDefaultSrc(img.src);
             return (
               <figure className="gallery-item" key={img.src}>
                 <img
@@ -33,10 +33,10 @@ export function Gallery() {
                   srcSet={
                     remote
                       ? remoteGallerySrcSet(img.src)
-                      : localPngSrcSet(img.src)
+                      : localGalleryWebpSrcSet(img.src)
                   }
                   sizes="(min-width: 1024px) 33vw, (min-width: 769px) 50vw, 100vw"
-                  alt={img.alt}
+                  alt={img.alt || "צילום מהמסעדה"}
                   width={1024}
                   height={576}
                   loading="lazy"

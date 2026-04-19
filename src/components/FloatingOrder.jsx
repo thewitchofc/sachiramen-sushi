@@ -9,6 +9,7 @@ export function FloatingOrder() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="הזמן עכשיו ב-Wolt, משלוח ואיסוף"
+        data-track-order="fab"
       >
         <span className="fab-order__label">הזמן עכשיו</span>
         <span className="fab-order__hint">Wolt · משלוח איסוף</span>
