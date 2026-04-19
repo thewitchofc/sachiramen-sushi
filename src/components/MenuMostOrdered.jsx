@@ -13,6 +13,7 @@ export function MenuMostOrdered() {
         {mostOrderedDishes.map((item) => (
           <li className="menu-card menu-popular-card" key={item.title}>
             <div className="menu-popular-card__media">
+              <div className="menu-card__badge">פופולרי</div>
               <img
                 src={
                   isRemoteImageUrl(item.image)

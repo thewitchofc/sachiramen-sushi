@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { menuCategories, WOLT_URL } from "../data/siteContent.js";
 import { useMatchMobileMenu } from "../hooks/useMatchMobileMenu.js";
@@ -19,6 +20,17 @@ function remoteMenuSrcSet(src) {
   return [line(480), line(720), line(960)].join(", ");
 }
 
+const MENU_SCROLL_Y_KEY = "menuScrollY";
+
+function saveMenuScrollAndNavigate(navigate, dishId) {
+  try {
+    sessionStorage.setItem(MENU_SCROLL_Y_KEY, String(window.scrollY));
+  } catch {
+    /* quota / מצב פרטי */
+  }
+  navigate(`/dish/${dishId}`);
+}
+
 function MenuItemRow({ item, dishTitleLevel = "category" }) {
   const navigate = useNavigate();
   const isMobile = useMatchMobileMenu();
@@ -32,7 +44,7 @@ function MenuItemRow({ item, dishTitleLevel = "category" }) {
       e.stopPropagation();
       return;
     }
-    navigate(`/dish/${dishId}`);
+    saveMenuScrollAndNavigate(navigate, dishId);
   };
 
   const handleCardKeyDown = (e) => {
@@ -40,7 +52,7 @@ function MenuItemRow({ item, dishTitleLevel = "category" }) {
     if (e.target !== e.currentTarget && e.target.closest("button, a")) return;
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      navigate(`/dish/${dishId}`);
+      saveMenuScrollAndNavigate(navigate, dishId);
     }
   };
 
@@ -107,7 +119,7 @@ function MenuItemRow({ item, dishTitleLevel = "category" }) {
           </div>
           <div className="menu-item-price-wrap">
             {showPopular ? (
-              <span className="menu-item-badge-popular">פופולרי</span>
+              <div className="menu-card__badge">פופולרי</div>
             ) : null}
             {item.priceDisplay != null ? (
               <span className="menu-item-price" aria-label={`מחיר: ${item.priceDisplay}`}>
@@ -127,6 +139,34 @@ function MenuItemRow({ item, dishTitleLevel = "category" }) {
 }
 
 export function MenuSection() {
+  useEffect(() => {
+    const savedScroll = sessionStorage.getItem(MENU_SCROLL_Y_KEY);
+    let timeoutId;
+
+    if (savedScroll) {
+      timeoutId = window.setTimeout(() => {
+        const top = parseInt(savedScroll, 10);
+        if (!Number.isNaN(top)) {
+          window.scrollTo({
+            top,
+            behavior: "auto",
+          });
+        }
+        try {
+          sessionStorage.removeItem(MENU_SCROLL_Y_KEY);
+        } catch {
+          /* ignore */
+        }
+      }, 50);
+    } else {
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+
+    return () => {
+      if (timeoutId != null) window.clearTimeout(timeoutId);
+    };
+  }, []);
+
   return (
     <section className="section menu-section section--light" id="menu">
       <div className="container">
@@ -160,6 +200,7 @@ export function MenuSection() {
             return (
               <section
                 id={sectionId}
+                data-category={cat.id}
                 className={`menu-category${hasContent ? "" : " menu-category--empty"}`}
                 key={`${cat.title}-${index}`}
                 aria-labelledby={headingId}

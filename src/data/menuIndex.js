@@ -2,7 +2,9 @@ import { menuCategories } from "./menuCatalog.js";
 import { getMenuItemId } from "../utils/menuIds.js";
 
 /** @type {Map<string, object> | null} */
-let cache = null;
+let dishesMap = null;
+/** @type {Array<object & { id: string }> | null} */
+let dishesList = null;
 
 function flattenCategories() {
   /** @type {Array<object & { id: string }>} */
@@ -41,16 +43,35 @@ function flattenCategories() {
   return out;
 }
 
-export function getMenuItemsIndex() {
-  if (cache) return cache;
-  const map = new Map();
-  for (const row of flattenCategories()) {
-    if (!map.has(row.id)) {
-      map.set(row.id, row);
+function ensureMenuCaches() {
+  if (dishesMap) return;
+  const rows = flattenCategories();
+  dishesList = rows;
+  dishesMap = new Map();
+  for (const row of rows) {
+    if (!dishesMap.has(row.id)) {
+      dishesMap.set(row.id, row);
     }
   }
-  cache = map;
-  return cache;
+}
+
+/** כל המנות השטוחות (עם id) — לשימוש ב־find וכו׳ */
+export function getAllDishes() {
+  ensureMenuCaches();
+  return dishesList;
+}
+
+/** מנה לפי id — כמו getMenuItemById, דרך allDishes.find */
+export function getDishById(id) {
+  if (!id || typeof id !== "string") return null;
+  const norm = decodeURIComponent(id);
+  const allDishes = getAllDishes();
+  return allDishes.find((dish) => dish.id === norm) ?? null;
+}
+
+export function getMenuItemsIndex() {
+  ensureMenuCaches();
+  return dishesMap;
 }
 
 /** מנה מלאה לפי id מה־URL או null */

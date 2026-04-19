@@ -301,16 +301,33 @@ a:hover {
   position: fixed;
   inset-inline: 0;
   top: 0;
-  z-index: 200;
+  z-index: 1000;
   height: var(--header-h);
   display: flex;
   flex-direction: column;
   align-items: stretch;
   background: rgba(245, 241, 230, 0.88);
-  border-bottom: 1px solid var(--line-gold);
+  border-bottom: none;
   backdrop-filter: blur(14px) saturate(1.08);
   -webkit-backdrop-filter: blur(14px) saturate(1.08);
   transition: background var(--transition), box-shadow var(--transition);
+}
+
+/* קו תחתון לכותרת — מוסתר כשהתפריט הנייד פתוח (body.nav-is-open) */
+.site-header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #e5e5e5;
+  pointer-events: none;
+  z-index: 1;
+}
+
+body.nav-is-open .site-header::after {
+  display: none;
 }
 
 .site-header.is-scrolled {
@@ -1380,6 +1397,7 @@ section[id] {
 }
 
 .menu-popular-card__media {
+  position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
   background: rgba(22, 19, 16, 0.06);
@@ -1443,34 +1461,62 @@ section[id] {
   box-shadow: 0 4px 18px rgba(22, 19, 16, 0.05);
 }
 
+/* fade עדין בקצוות — מעל המסלול; sticky נשאר מהכלל למעלה (לא position: relative בנפרד) */
+.menu-cat-nav {
+  isolation: isolate;
+}
+
+.menu-cat-nav::before,
+.menu-cat-nav::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.menu-cat-nav::before {
+  left: 0;
+  background: linear-gradient(to right, #f5f1e6, transparent);
+}
+
+.menu-cat-nav::after {
+  right: 0;
+  background: linear-gradient(to left, #f5f1e6, transparent);
+}
+
 .menu-cat-nav__track {
+  position: relative;
+  z-index: 0;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
-  gap: 0.35rem;
+  box-sizing: border-box;
+  gap: 8px;
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-snap-type: x proximity;
-  scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(212, 160, 23, 0.45) transparent;
+  padding-inline: 16px;
   padding-block: 0.1rem;
+  scroll-padding-inline: 16px;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
 
-.menu-cat-nav__track::-webkit-scrollbar {
-  height: 5px;
+.menu-cat-nav__track > * {
+  scroll-snap-align: start;
 }
 
-.menu-cat-nav__track::-webkit-scrollbar-thumb {
-  background: rgba(212, 160, 23, 0.42);
-  border-radius: 999px;
+.menu-cat-nav__track::-webkit-scrollbar {
+  display: none;
 }
 
 .menu-cat-nav__btn {
   flex: 0 0 auto;
-  scroll-snap-align: start;
   margin: 0;
   border: 1px solid rgba(212, 160, 23, 0.3);
   background: rgba(255, 255, 255, 0.72);
@@ -1494,17 +1540,16 @@ section[id] {
 }
 
 @media (hover: hover) {
-  .menu-cat-nav__btn:hover {
+  .menu-cat-nav__btn:hover:not(.active) {
     border-color: rgba(196, 30, 36, 0.32);
     background: rgba(255, 255, 255, 0.95);
   }
 }
 
-.menu-cat-nav__btn.is-active {
-  border-color: var(--color-red);
-  background: rgba(196, 30, 36, 0.09);
-  color: var(--color-red);
-  box-shadow: 0 0 0 1px rgba(196, 30, 36, 0.14);
+.menu-cat-nav__btn.active {
+  background: #c41e24;
+  color: white;
+  border-color: #c41e24;
 }
 
 /* מרווח לקפיצה מ־# או scrollIntoView — תואם בערך ל־header + שורת קטגוריות דביקה */
@@ -1716,15 +1761,17 @@ section[id] {
   justify-content: flex-end;
 }
 
-.menu-item-badge-popular {
-  font-family: var(--font-he);
-  font-size: 0.6875rem;
+.menu-card__badge {
+  position: absolute;
+  top: 8px;
+  inset-inline-end: 8px;
+  z-index: 1;
+  background: #c41e24;
+  color: white;
+  font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  padding: 0.2em 0.55em;
+  padding: 4px 8px;
   border-radius: 999px;
-  background: #2563eb;
-  color: #fff;
   white-space: nowrap;
   line-height: 1.2;
 }
@@ -1868,6 +1915,53 @@ section[id] {
   color: var(--color-ink-muted-on-cream);
   margin-bottom: var(--space-xl);
   white-space: pre-line;
+}
+
+.dish-page__desc-line {
+  margin: 0;
+}
+
+.dish-page__desc-line + .dish-page__desc-line {
+  margin-top: var(--space-sm);
+}
+
+.dish-page__desc-line--secondary {
+  font-size: 1rem;
+  opacity: 0.92;
+}
+
+.dish-page .combo-details {
+  margin-top: 16px;
+  margin-bottom: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dish-page .combo-item {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #444;
+  line-height: 1.5;
+}
+
+.dish-page .combo-item::before {
+  content: "•";
+  display: inline-block;
+  margin-left: 6px;
+  color: #c41e24;
+}
+
+.dish-page .combo-item strong {
+  color: var(--color-ink-on-cream);
+  font-weight: 600;
+}
+
+.dish-page .combo-ingredients {
+  margin-top: 0.2rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: #555;
 }
 
 .dish-page__order {
@@ -3231,9 +3325,12 @@ section[id] {
   }
 
   .hero {
-    min-height: 80vh;
-    min-height: 80dvh;
-    padding-top: 70px;
+    min-height: 100vh;
+    min-height: 100dvh;
+    min-height: 100svh; /* גובה שורת כתובת / ממשק מובייל — מסך “אמיתי” */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     box-sizing: border-box;
   }
 
@@ -3242,6 +3339,8 @@ section[id] {
     flex-direction: column;
     align-items: center;
     gap: 10px;
+    padding-top: 60px; /* מרווח מה-header הקבוע */
+    padding-bottom: 100px; /* מקום לכפתורים / גלילה נוחה מעל ה-FAB */
   }
 
   .hero-tag,
@@ -3253,6 +3352,7 @@ section[id] {
   }
 
   .hero-title {
+    margin-bottom: 12px;
     font-size: clamp(1.8rem, 7vw, 2.4rem);
     line-height: 1.15;
     letter-spacing: -0.5px;
@@ -3282,6 +3382,7 @@ section[id] {
   }
 
   .hero-subtitle {
+    margin-bottom: 16px;
     font-size: 0.9rem;
     margin-top: 0.5rem;
     opacity: 0.85;

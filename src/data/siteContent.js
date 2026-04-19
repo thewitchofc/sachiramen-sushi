@@ -187,8 +187,8 @@ export const reviews = [
 
 /** טווח שעות ב־range — תמיד מוצג ב־LTR כדי שלא יתהפך ב־RTL (12:00–23:30) */
 export const hours = [
-  { day: "יום ראשון", range: "12:00–23:30" },
-  { day: "יום שני", closed: true },
+  { day: "יום ראשון", closed: true },
+  { day: "יום שני", range: "12:00–23:30" },
   { day: "יום שלישי", range: "12:00–23:30" },
   { day: "יום רביעי", range: "12:00–23:30" },
   { day: "יום חמישי", range: "12:00–23:30" },

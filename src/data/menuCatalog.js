@@ -6,9 +6,12 @@
  *
  * id: חובה לפריט בלי ‎/media/menu/menu-*.jpg — אחרת נגזר משם הקובץ.
  * description: תיאור ארוך לדף מנה (אופציונלי); אם ריק — לא מוצג ב־DishPage.
+ * comboItems: לקומבינציות — מערך { rollId }; rollId = id מנה מהתפריט (getDishById).
+ * לכל אובייקט קטגוריה ברמה העליונה: id (מחרוזת יציבה) ל־data-category ולניווט דביק.
  */
 export const menuCategories = [
   {
+    id: "starters",
     title: "ראשונות",
     items: [
       {
@@ -61,6 +64,7 @@ export const menuCategories = [
     ],
   },
   {
+    id: "yakitori",
     title: "יקיטורי",
     items: [
       {
@@ -85,6 +89,7 @@ export const menuCategories = [
     ],
   },
   {
+    id: "ramen",
     title: "ראמן",
     footnote:
       "מרכיבי הראמן מוגשים בנפרד; יש לחמם לפי ההוראות. כלול כפית חד־פעמית, ג׳ינג׳ר וצ׳ילי קריספי בצד. הראמן בסגנון צ׳ינטן — מרק צלול שמתבשל לאט לחילוץ טעמים, קליל ומאוזן.",
@@ -119,6 +124,7 @@ export const menuCategories = [
     ],
   },
   {
+    id: "sushi-io",
     title: "סושי אינסייד אאוט (I/O)",
     footnote:
       "מכל שתי מנות סושי מוגש סט רטבים (ג׳ינג׳ר, וואסאבי, סויה, מיונז חריף, טריאקי). רטבים נוספים בתשלום.",
@@ -202,30 +208,54 @@ export const menuCategories = [
     ],
   },
   {
+    id: "combos",
     title: "קומבינציות",
     items: [
       {
+        id: "combo-raw",
         name: "קומבינציית Raw",
+        description: "מבחר רולים וניגירי",
         desc: "רול טונה חריף, מאקי סלמון ואבוקדו, ניגירי טונה אדומה.",
         price: 189,
         image: "/media/menu/menu-combo-raw.jpg",
+        comboItems: [
+          { rollId: "io-10" },
+          { rollId: "maki-salmon-avocado" },
+          { rollId: "nigiri-whitefish" },
+        ],
       },
       {
+        id: "combo-crunch",
         name: "קומבינציית Crunch",
+        description: "מבחר רולים וניגירי",
         desc: "סלמון טריאקי, פיש קראנצ׳י, מאקי סלמון אפוי ובצל ירוק, ניגירי צרוב בחמאה חומה.",
         price: 169,
         image: "/media/menu/menu-combo-crunch.jpg",
+        comboItems: [
+          { rollId: "io-03" },
+          { rollId: "io-05" },
+          { rollId: "maki-baked-salmon-scallion" },
+          { rollId: "nigiri-aburi" },
+        ],
       },
       {
+        id: "combo-green",
         name: "קומבינציית Green",
+        description: "מבחר רולים צמחוניים",
         desc: "קראנצ׳י בטטה, טופו רול, מאקי אבוקדו וקמפיו.",
         price: 119,
         image: "/media/menu/menu-combo-green.jpg",
         tags: ["veg"],
+        comboItems: [
+          { rollId: "io-01" },
+          { rollId: "io-02" },
+          { rollId: "maki-avocado-kanpyo" },
+        ],
       },
     ],
   },
   {
+    id: "maki",
     title: "מאקי",
     items: [
       {
@@ -283,6 +313,7 @@ export const menuCategories = [
     ],
   },
   {
+    id: "nigiri",
     title: "ניגירי",
     items: [
       {
@@ -313,6 +344,7 @@ export const menuCategories = [
     ],
   },
   {
+    id: "sashimi",
     title: "סשימי",
     items: [
       {
@@ -330,6 +362,7 @@ export const menuCategories = [
     ],
   },
   {
+    id: "desserts",
     title: "קינוחים",
     items: [
       {
@@ -347,6 +380,7 @@ export const menuCategories = [
     ],
   },
   {
+    id: "sauces",
     title: "רטבים",
     footnote: "כל הרטבים ב־2 ₪ ליחידה.",
     items: [
@@ -407,6 +441,7 @@ export const menuCategories = [
     ],
   },
   {
+    id: "alcohol",
     title: "אלכוהול",
     subsections: [
       {
@@ -575,6 +610,7 @@ export const menuCategories = [
     ],
   },
   {
+    id: "soft-drinks",
     title: "שתיה קלה",
     items: [
       {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { menuCategories } from "../data/siteContent.js";
 
 function categorySectionId(index) {
@@ -29,55 +29,55 @@ function scrollPageToCategoryEl(el, navEl) {
 export function MenuCategoryStickyNav() {
   const trackRef = useRef(null);
   const navRef = useRef(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const scrollSpyEnabledRef = useRef(true);
+  const [activeCategory, setActiveCategory] = useState(null);
+  /** בזמן גלילה מלחיצה על טאב — לא לעדכן מ־IO כדי למנוע ריצוד */
+  const ioSuspendedRef = useRef(false);
 
-  const updateActiveFromScroll = useCallback(() => {
-    const navH = navRef.current?.offsetHeight ?? 52;
-    const headerEl = document.querySelector(".site-header");
-    const headerH = headerEl?.offsetHeight ?? 72;
-    const probe = window.scrollY + headerH + navH + 8;
+  useEffect(() => {
+    const sections = document.querySelectorAll("[data-category]");
 
-    let next = 0;
-    for (let i = 0; i < menuCategories.length; i++) {
-      const el = document.getElementById(categorySectionId(i));
-      if (!el) continue;
-      const top = el.getBoundingClientRect().top + window.scrollY;
-      if (top <= probe) next = i;
-    }
-    setActiveIndex(next);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting || ioSuspendedRef.current) return;
+          const cat = entry.target.dataset.category;
+          if (cat != null && cat !== "") {
+            setActiveCategory(cat);
+          }
+        });
+      },
+      {
+        rootMargin: "-40% 0px -50% 0px",
+        threshold: 0.1,
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
-    let ticking = false;
-    const onScroll = () => {
-      if (!scrollSpyEnabledRef.current) return;
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        ticking = false;
-        updateActiveFromScroll();
-      });
-    };
-    updateActiveFromScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
-  }, [updateActiveFromScroll]);
+    if (activeCategory == null || ioSuspendedRef.current) return;
+    const activeBtn = document.querySelector(".menu-cat-nav__btn.active");
+    if (!activeBtn) return;
+    const behavior = prefersReducedMotion() ? "auto" : "smooth";
+    activeBtn.scrollIntoView({
+      behavior,
+      inline: "center",
+      block: "nearest",
+    });
+  }, [activeCategory]);
 
-  const onCategoryClick = (index) => {
+  const onCategoryClick = (index, categoryId) => {
     const id = categorySectionId(index);
     const el = document.getElementById(id);
     if (!el) return;
 
-    scrollSpyEnabledRef.current = false;
-    setActiveIndex(index);
+    ioSuspendedRef.current = true;
+    setActiveCategory(categoryId);
 
     const navEl = navRef.current;
-    // שני rAF — אחרי פריסה (בעיקר iOS) כדי שהמיקום יחושב נכון
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         scrollPageToCategoryEl(el, navEl);
@@ -95,8 +95,7 @@ export function MenuCategoryStickyNav() {
     });
 
     window.setTimeout(() => {
-      scrollSpyEnabledRef.current = true;
-      updateActiveFromScroll();
+      ioSuspendedRef.current = false;
     }, prefersReducedMotion() ? 80 : 900);
   };
 
@@ -107,19 +106,25 @@ export function MenuCategoryStickyNav() {
       aria-label="קפיצה לקטגוריה בתפריט"
     >
       <div ref={trackRef} className="menu-cat-nav__track">
-        {menuCategories.map((cat, index) => (
-          <button
-            key={`${cat.title}-${index}`}
-            type="button"
-            data-menu-cat-index={index}
-            className={`menu-cat-nav__btn${activeIndex === index ? " is-active" : ""}`}
-            aria-label={`עבור לקטגוריה: ${cat.title}`}
-            aria-current={activeIndex === index ? "true" : undefined}
-            onClick={() => onCategoryClick(index)}
-          >
-            {cat.title}
-          </button>
-        ))}
+        {menuCategories.map((category, index) => {
+          const categoryId = category.id ?? String(index);
+          const isActive = activeCategory === categoryId;
+          return (
+            <button
+              key={`${category.title}-${index}`}
+              type="button"
+              data-menu-cat-index={index}
+              className={`menu-cat-nav__btn ${
+                activeCategory === category.id ? "active" : ""
+              }`.trim()}
+              aria-label={`עבור לקטגוריה: ${category.title}`}
+              aria-current={isActive ? "true" : undefined}
+              onClick={() => onCategoryClick(index, categoryId)}
+            >
+              {category.name ?? category.title}
+            </button>
+          );
+        })}
       </div>
     </nav>
   );

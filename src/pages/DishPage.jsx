@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { trackDishPageEnter } from "../analytics/gaEvents.js";
-import { getMenuItemById } from "../data/menuIndex.js";
+import { getDishById, getMenuItemById } from "../data/menuIndex.js";
 import { WOLT_URL } from "../data/siteContent.js";
 import { isRemoteImageUrl, menuThumbSrcSet } from "../utils/imageHelpers.js";
 
@@ -33,7 +33,8 @@ export default function DishPage() {
 
   const longText = typeof item.description === "string" ? item.description.trim() : "";
   const shortText = typeof item.desc === "string" ? item.desc.trim() : "";
-  const showText = longText || shortText;
+  const comboItems = Array.isArray(item.comboItems) ? item.comboItems : [];
+  const showDescBlock = Boolean(longText || shortText);
 
   const priceLine =
     item.priceDisplay != null
@@ -81,7 +82,42 @@ export default function DishPage() {
               {priceLine}
             </p>
           ) : null}
-          {showText ? <div className="dish-page__desc">{longText || shortText}</div> : null}
+          {showDescBlock ? (
+            <div className="dish-page__desc">
+              {longText ? <p className="dish-page__desc-line">{longText}</p> : null}
+              {shortText ? (
+                <p className={longText ? "dish-page__desc-line dish-page__desc-line--secondary" : "dish-page__desc-line"}>
+                  {shortText}
+                </p>
+              ) : null}
+            </div>
+          ) : null}
+
+          {item.comboItems && comboItems.length > 0 ? (
+            <div className="combo-details" role="region" aria-label="רכיבי הקומבינציה">
+              {comboItems.map((comboEntry, index) => {
+                const roll =
+                  comboEntry.rollId != null
+                    ? getDishById(String(comboEntry.rollId))
+                    : null;
+                if (!roll) return null;
+                const fromIngredients =
+                  Array.isArray(roll.ingredients) && roll.ingredients.length > 0
+                    ? roll.ingredients.join(", ")
+                    : "";
+                const ingredientsLine =
+                  fromIngredients ||
+                  (typeof roll.description === "string" ? roll.description.trim() : "") ||
+                  (typeof roll.desc === "string" ? roll.desc.trim() : "");
+                return (
+                  <div key={roll.id ?? index} className="combo-item">
+                    <strong>{roll.name}</strong>
+                    <div className="combo-ingredients">{ingredientsLine}</div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : null}
 
           <a
             className="btn btn-outline dish-page__order"
