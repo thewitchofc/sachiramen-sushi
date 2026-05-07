@@ -2953,7 +2953,7 @@ section[id] {
 }
 
 .press-section > .container::before {
-  inset: clamp(2rem, 3.8vw, 3rem) 0 clamp(2.4rem, 5.4vw, 4.2rem) 0;
+  inset: clamp(4.5rem, 8vw, 6.5rem) 0 clamp(2.4rem, 5.4vw, 4.2rem) 0;
 }
 
 .press-section .section-eyebrow {
