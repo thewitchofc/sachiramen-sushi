@@ -65,29 +65,31 @@ export function Footer() {
           <Link to="/privacy">מדיניות פרטיות</Link>
           <Link to="/allergens">הצהרת אלרגנים</Link>
         </nav>
-        <p className="footer-copy">
-          &copy; {year} Sachi Ramen &amp; Sushi. כל הזכויות שמורות.
-        </p>
-        <p className="footer-updated">עודכן לאחרונה: 2026</p>
-        <p className="footer-alcohol" role="note">
-          מכירת אלכוהול מעל גיל 18 בלבד ·{" "}
-          <Link to="/terms#alcohol">פרטים בתנאי השימוש</Link>
-        </p>
-        <div className="footer-credit" dir="rtl">
-          <span className="footer-credit__label">תכנות ופיתוח ע״י</span>
-          {developerHref ? (
-            <a
-              className="footer-credit__logo-link"
-              href={developerHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="THE WITCH — מעבר לאתר התכנות והפיתוח"
-            >
-              {developerLogo}
-            </a>
-          ) : (
-            developerLogo
-          )}
+        <div className="footer-meta">
+          <p className="footer-copy">
+            &copy; {year} Sachi Ramen &amp; Sushi. כל הזכויות שמורות.
+          </p>
+          <p className="footer-updated">עודכן לאחרונה: 2026</p>
+          <p className="footer-alcohol" role="note">
+            מכירת אלכוהול מעל גיל 18 בלבד ·{" "}
+            <Link to="/terms#alcohol">פרטים בתנאי השימוש</Link>
+          </p>
+          <div className="footer-credit" dir="rtl">
+            <span className="footer-credit__label">תכנות ופיתוח ע״י</span>
+            {developerHref ? (
+              <a
+                className="footer-credit__logo-link"
+                href={developerHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="THE WITCH — מעבר לאתר התכנות והפיתוח"
+              >
+                {developerLogo}
+              </a>
+            ) : (
+              developerLogo
+            )}
+          </div>
         </div>
       </div>
     </footer>

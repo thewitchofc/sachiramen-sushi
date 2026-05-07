@@ -41,28 +41,45 @@
         transition: opacity 0.5s ease;
       }
       .loader-logo {
-        width: 90px;
-        max-width: 25vw;
-        height: auto;
-        animation: logoFloat 2.2s ease-in-out infinite alternate;
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 0;
+        box-shadow: none;
+        transform: scale(1.03);
+        animation: loaderKenBurns 2.6s ease-in-out infinite alternate;
       }
-      @keyframes logoFloat {
-        from {
-          transform: translateY(0) scale(0.97);
-          opacity: 0.82;
+
+      /* Desktop: fit the whole artwork (no crop) */
+      @media (min-width: 900px) {
+        .loader-logo {
+          object-fit: cover;
+          transform: none;
+          animation: none;
         }
-        to {
-          transform: translateY(-4px) scale(1);
-          opacity: 1;
+      }
+      @keyframes loaderKenBurns {
+        0% {
+          transform: scale(1.03);
+          filter: saturate(1) contrast(1);
+        }
+        100% {
+          transform: scale(1.08);
+          filter: saturate(1.06) contrast(1.02);
         }
       }
       .loader.hide {
         opacity: 0;
         pointer-events: none;
       }
-      @media (min-width: 768px) {
+      @media (prefers-reduced-motion: reduce) {
         .loader-logo {
-          width: 110px;
+          animation: none;
+          transform: none;
+          filter: none;
         }
       }
     </style>
@@ -76,16 +93,19 @@
       aria-busy="true"
       aria-label="טוען"
     >
-      <img
-        class="loader-logo"
-        src="/logo-sachi.webp"
-        alt="לוגו Sachi Ramen &amp; Sushi — טוען"
-        width="120"
-        height="120"
-        fetchpriority="high"
-        decoding="async"
-        loading="eager"
-      />
+      <picture>
+        <source media="(min-width: 900px)" srcset="/loader/loader-art-desktop.webp" />
+        <img
+          class="loader-logo"
+          src="/loader/loader-art.webp"
+          alt="Sachi Ramen &amp; Sushi — טוען"
+          width="520"
+          height="520"
+          fetchpriority="high"
+          decoding="async"
+          loading="eager"
+        />
+      </picture>
     </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>

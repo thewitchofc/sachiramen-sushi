@@ -75,9 +75,6 @@ export function Layout() {
     <>
       <SeoHead />
       <JsonLdRestaurant />
-      <a href="#main-content" className="skip-link">
-        דלג לתוכן
-      </a>
       <Header />
       <main id="main-content" className="main-content">
         <Outlet />

@@ -12,7 +12,6 @@ export function Contact() {
   return (
     <section className="section contact-section section--dark" id="contact">
       <div className="container">
-        <p className="section-eyebrow">בואו לבקר</p>
         <h1 className="section-title">יצירת קשר</h1>
         <div className="contact-layout">
           <div className="contact-info">
@@ -39,19 +38,21 @@ export function Contact() {
                 <dt>שעות פעילות</dt>
                 <dd>
                   <OpeningHoursList />
+                  <div className="contact-hours-cta-wrap">
+                    <a
+                      className="btn btn-outline contact-cta"
+                      href={WOLT_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="הזמן ב-וולט"
+                      data-track-order="contact"
+                    >
+                      הזמן ב-וולט
+                    </a>
+                  </div>
                 </dd>
               </div>
             </dl>
-            <a
-              className="btn btn-outline contact-cta"
-              href={WOLT_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="הזמן ב-Wolt"
-              data-track-order="contact"
-            >
-              הזמן ב-Wolt
-            </a>
           </div>
           <div className="map-column">
             <div className="map-wrap">

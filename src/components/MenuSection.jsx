@@ -173,7 +173,7 @@ export function MenuSection() {
         <h1 className="visually-hidden">
           תפריט — סאצ&apos;י ראמן וסושי, דיזנגוף 98 תל אביב
         </h1>
-        <MenuMostOrdered />
+        <MenuCategoryStickyNav />
         <p className="section-eyebrow">התפריט</p>
         <h2 className="section-title menu-section__title">תפריט מלא</h2>
         <p className="menu-allergen-note">
@@ -181,8 +181,7 @@ export function MenuSection() {
             הצהרת אלרגנים ורגישויות — חשוב לקרוא לפני הזמנה
           </Link>
         </p>
-
-        <MenuCategoryStickyNav />
+        <MenuMostOrdered />
 
         <div className="menu-categories">
           {menuCategories.map((cat, index) => {

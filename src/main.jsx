@@ -3,6 +3,9 @@ import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import "./styles/global.css";
 
+// Global site theme (kept as a class for easy future toggles)
+document.body.classList.add("theme-dramatic");
+
 /** זמן מינימום שהלואדר נשאר גלוי לפני fade (גם אם load כבר קרה) */
 const LOADER_MIN_VISIBLE_MS = 1200;
 /** אם אירוע load לא מגיע (רשת איטית וכו׳) — מתחילים יציאה בכל זאת */
