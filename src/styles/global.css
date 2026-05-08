@@ -2293,6 +2293,8 @@ section[id] {
   width: 100%;
   max-width: 22rem;
   margin-inline: 0;
+  margin-bottom: 0.35rem;
+  border-radius: 999px;
 }
 
 @media (max-width: 768px) {
@@ -2314,10 +2316,13 @@ section[id] {
 }
 
 .menu-mid-cta {
-  margin-top: var(--space-3xl);
-  padding-top: var(--space-2xl);
+  margin-top: var(--space-xl);
+  padding-top: var(--space-md);
   text-align: center;
   border-top: 1px solid var(--line-gold-mid);
+  position: relative;
+  z-index: 2;
+  transform: translateY(-1rem);
 }
 
 /* כפתור הזמנה מתחת לתפריט — משני (הדגשה ב־FAB) */
@@ -2326,13 +2331,16 @@ section[id] {
   width: 100%;
   max-width: min(22rem, 94vw);
   margin-inline: auto;
+  margin-top: -2.2rem;
   min-height: 3.15rem;
   padding: 0.85rem 1.75rem;
   font-size: clamp(0.98rem, 3vw, 1.08rem);
   font-weight: 600;
   letter-spacing: 0.07em;
-  border-radius: var(--radius-md);
+  border-radius: 999px;
   justify-content: center;
+  position: relative;
+  z-index: 3;
 }
 
 /* ——— פס הזמנה Wolt (אחרי תפריט) ——— */
@@ -3307,7 +3315,7 @@ section[id] {
 
 /* ——— Footer ——— */
 .site-footer {
-  padding: var(--space-xl) 0 calc(var(--space-lg) + var(--order-bar-h));
+  padding: var(--space-lg) 0 calc(var(--space-sm) + var(--order-bar-h));
   border-top: none;
   position: relative;
   z-index: 5;
@@ -3322,20 +3330,20 @@ section[id] {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: var(--space-md);
+  gap: var(--space-sm);
 }
 
 .footer-brand {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
 }
 
 .footer-logo {
-  height: 2.6rem;
+  height: 2.2rem;
   width: auto;
-  max-width: min(72vw, 168px);
+  max-width: min(70vw, 154px);
   margin-inline: auto;
   padding: 0.25rem 0.5rem;
   object-fit: contain;
@@ -3347,24 +3355,24 @@ section[id] {
 
 .footer-tagline {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: 0.98rem;
   color: var(--color-ink-muted-on-cream);
 }
 
 .footer-nav {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem 0.5rem;
+  gap: 0.15rem 0.35rem;
   justify-content: center;
 }
 
 .footer-nav a {
   color: var(--color-ink-muted-on-cream);
-  font-size: 0.98rem;
+  font-size: 0.92rem;
   min-height: 0;
   display: inline-flex;
   align-items: center;
-  padding: 0.35rem 0.6rem;
+  padding: 0.2rem 0.45rem;
 }
 
 .footer-nav a:hover {
@@ -3382,7 +3390,7 @@ section[id] {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 0.35rem 1.1rem;
+  gap: 0.2rem 0.8rem;
 }
 
 .footer-meta > * {
@@ -3392,7 +3400,7 @@ section[id] {
 .footer-updated {
   margin: 0;
   font-size: 0.8125rem;
-  line-height: 1.45;
+  line-height: 1.35;
   color: rgba(26, 26, 26, 0.38);
   text-align: center;
 }
@@ -3400,7 +3408,7 @@ section[id] {
 .footer-alcohol {
   margin: 0;
   font-size: 0.8125rem;
-  line-height: 1.5;
+  line-height: 1.4;
   color: rgba(26, 26, 26, 0.48);
   text-align: center;
 }
@@ -3420,7 +3428,7 @@ section[id] {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem 0.65rem;
+  gap: 0.35rem 0.5rem;
   margin: 0;
 }
 
@@ -3453,9 +3461,9 @@ section[id] {
 
 .footer-credit__logo {
   display: block;
-  height: 2.25rem;
+  height: 1.9rem;
   width: auto;
-  max-width: 5.5rem;
+  max-width: 4.8rem;
   object-fit: contain;
   border-radius: var(--radius-sm);
 }
@@ -3604,6 +3612,11 @@ section[id] {
 
   .main-content {
     padding-bottom: 0;
+  }
+
+  .wa-maneki__img {
+    width: 84px;
+    max-width: 84px;
   }
 
   .nav-backdrop {
@@ -3804,7 +3817,7 @@ section[id] {
   }
 
   .site-footer {
-    padding: var(--space-lg) 0 var(--space-md);
+    padding: var(--space-md) 0 var(--space-xs);
   }
 
   /* Desktop: compact pill FAB */
@@ -4160,7 +4173,7 @@ section[id] {
   }
 
   .footer-inner {
-    gap: var(--space-lg);
+    gap: var(--space-sm);
   }
 
   .nav-list {
