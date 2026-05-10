@@ -722,7 +722,8 @@ button:active:not(.nav-backdrop):not(.btn) {
   background-color: #141312;
 }
 
-.hero-bg img {
+.hero-bg img,
+.hero-bg video {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -731,8 +732,15 @@ button:active:not(.nav-backdrop):not(.btn) {
   object-fit: cover;
   object-position: center;
   pointer-events: none;
+}
+
+.hero-bg img {
   transform-origin: center center;
   animation: heroZoom 12s ease-in-out infinite alternate;
+}
+
+.hero-bg video {
+  transform: none;
 }
 
 @media (max-width: 767px) {
@@ -753,6 +761,10 @@ button:active:not(.nav-backdrop):not(.btn) {
 @media (prefers-reduced-motion: reduce) {
   .hero-bg img {
     animation: none;
+    transform: none;
+  }
+
+  .hero-bg video {
     transform: none;
   }
 }
@@ -784,6 +796,22 @@ button:active:not(.nav-backdrop):not(.btn) {
   max-width: 900px;
   padding: 0 1.5rem;
   text-align: center;
+}
+
+.hero-content::before {
+  content: "";
+  position: absolute;
+  inset: -1rem 0.75rem -1.2rem;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: clamp(14px, 2.2vw, 24px);
+  border: 1px solid rgba(245, 241, 230, 0.24);
+  background:
+    radial-gradient(ellipse 90% 76% at 50% 35%, rgba(255, 255, 255, 0.1) 0%, transparent 64%),
+    linear-gradient(180deg, rgba(14, 13, 12, 0.34) 0%, rgba(14, 13, 12, 0.5) 100%);
+  box-shadow:
+    0 12px 36px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
 }
 
 .hero-tag {
@@ -1564,9 +1592,8 @@ section[id] {
 
 .home-after-hero {
   position: relative;
-  /* slight overlap with hero to avoid a hard seam */
-  margin-top: -84px;
-  padding-top: 84px;
+  margin-top: 0;
+  padding-top: 0;
   background-image: url("/patterns/home-after-hero-bg.png");
   background-position: center;
   background-size: cover;
@@ -4062,8 +4089,14 @@ section[id] {
     flex-direction: column;
     align-items: center;
     gap: 10px;
+    max-width: none;
+    padding-inline: 0;
     padding-top: 60px; /* מרווח מה-header הקבוע */
     padding-bottom: 100px; /* מקום לכפתורים / גלילה נוחה מעל ה-FAB */
+  }
+
+  .hero-content::before {
+    content: none;
   }
 
   .hero-tag,

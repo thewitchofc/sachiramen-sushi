@@ -2,9 +2,7 @@ import { useLayoutEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
   brandVoice,
-  HERO_BG_SRC,
   heroTaglineHe,
-  WOLT_URL,
 } from "../data/siteContent.js";
 
 export function Hero() {
@@ -19,14 +17,13 @@ export function Hero() {
   return (
     <section ref={heroRef} className="hero" aria-label="פתיחה">
       <div className="hero-bg" aria-hidden="true">
-        <img
-          src={HERO_BG_SRC}
-          alt=""
-          width={1024}
-          height={682}
-          decoding="async"
-          fetchPriority="high"
-          loading="eager"
+        <video
+          src="/media/sachi-hero-video.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
         />
       </div>
       <div className="hero-overlay" aria-hidden="true" />
@@ -38,16 +35,6 @@ export function Hero() {
         </h1>
         <p className="hero-tagline-he">{heroTaglineHe}</p>
         <div className="hero-buttons">
-          <a
-            className="btn-hero-cta"
-            href={WOLT_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="הזמן עכשיו ב-Wolt"
-            data-track-order="hero"
-          >
-            הזמן עכשיו
-          </a>
           <Link
             className="btn-hero-secondary"
             to="/menu"
