@@ -12,6 +12,13 @@ function prefersReducedMotion() {
   );
 }
 
+function isMobileMenuViewport() {
+  return (
+    typeof window !== "undefined" &&
+    window.matchMedia?.("(max-width: 768px)").matches
+  );
+}
+
 /** גלילה לקטגוריה — מפצה על header קבוע + שורת קטגוריות דביקה (מובייל ודסקטופ) */
 function scrollPageToCategoryEl(el, navEl) {
   if (!el) return;
@@ -111,6 +118,9 @@ export function MenuCategoryStickyNav() {
       if (pendingActiveTimeoutRef.current != null) {
         window.clearTimeout(pendingActiveTimeoutRef.current);
       }
+      const mobile = isMobileMenuViewport();
+      const activeSetCooldownMs = mobile ? 220 : 0;
+      const activeSettleMs = mobile ? 120 : 0;
       // Small stabilization window prevents flicker near section boundaries.
       pendingActiveTimeoutRef.current = window.setTimeout(() => {
         pendingActiveTimeoutRef.current = null;
@@ -119,11 +129,11 @@ export function MenuCategoryStickyNav() {
         if (candidate === activeCategoryRef.current) return;
         const now = performance.now();
         // Prevent rapid back-and-forth updates while fast scrolling.
-        if (now - lastActiveSetAtRef.current < 220) return;
+        if (now - lastActiveSetAtRef.current < activeSetCooldownMs) return;
         lastActiveSetAtRef.current = now;
         activeCategoryRef.current = candidate;
         setActiveCategory(candidate);
-      }, 120);
+      }, activeSettleMs);
     };
 
     const onScrollOrResize = () => {
@@ -139,10 +149,16 @@ export function MenuCategoryStickyNav() {
       if (scrollSettleTimeoutRef.current != null) {
         window.clearTimeout(scrollSettleTimeoutRef.current);
       }
+      const mobile = isMobileMenuViewport();
+      if (!mobile) {
+        onScrollOrResize();
+        return;
+      }
+      const settleDelayMs = 170;
       scrollSettleTimeoutRef.current = window.setTimeout(() => {
         scrollSettleTimeoutRef.current = null;
         onScrollOrResize();
-      }, 170);
+      }, settleDelayMs);
     };
 
     const onResize = () => {
@@ -190,13 +206,16 @@ export function MenuCategoryStickyNav() {
     if (fullyVisible) return;
 
     const now = performance.now();
-    if (now - lastTrackAutoScrollAtRef.current < 420) return;
+    const mobile = isMobileMenuViewport();
+    const trackCooldownMs = mobile ? 420 : 20;
+    if (now - lastTrackAutoScrollAtRef.current < trackCooldownMs) return;
     lastTrackAutoScrollAtRef.current = now;
 
     if (pendingTrackScrollTimeoutRef.current != null) {
       window.clearTimeout(pendingTrackScrollTimeoutRef.current);
     }
     // Delay a touch so rapid active changes settle before moving the track.
+    const trackDelayMs = mobile ? 140 : 0;
     pendingTrackScrollTimeoutRef.current = window.setTimeout(() => {
       pendingTrackScrollTimeoutRef.current = null;
       const behavior = prefersReducedMotion() ? "auto" : "smooth";
@@ -206,7 +225,7 @@ export function MenuCategoryStickyNav() {
         inline: "nearest",
         block: "nearest",
       });
-    }, 140);
+    }, trackDelayMs);
   }, [activeCategory]);
 
   useEffect(
