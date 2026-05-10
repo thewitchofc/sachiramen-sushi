@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import {
   brandVoice,
   heroTaglineHe,
+  RESERVATION_URL,
 } from "../data/siteContent.js";
 
 export function Hero() {
@@ -35,8 +36,17 @@ export function Hero() {
         </h1>
         <p className="hero-tagline-he">{heroTaglineHe}</p>
         <div className="hero-buttons">
+          <a
+            className="btn-hero-secondary btn-hero-reserve"
+            href={RESERVATION_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="שמירת שולחן באונטופו"
+          >
+            שמירת שולחן
+          </a>
           <Link
-            className="btn-hero-secondary"
+            className="btn-hero-secondary btn-hero-menu"
             to="/menu"
             aria-label="צפה בתפריט המלא"
           >

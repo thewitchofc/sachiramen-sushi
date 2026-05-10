@@ -4,6 +4,7 @@ import {
   MAPS_SEARCH_URL,
   PHONE_DISPLAY,
   PHONE_TEL,
+  RESERVATION_URL,
   WOLT_URL,
 } from "../data/siteContent.js";
 import { OpeningHoursList } from "./OpeningHoursList.jsx";
@@ -39,6 +40,15 @@ export function Contact() {
                 <dd>
                   <OpeningHoursList />
                   <div className="contact-hours-cta-wrap">
+                    <a
+                      className="btn btn-outline contact-cta contact-cta--reserve"
+                      href={RESERVATION_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="שמירת שולחן באונטופו"
+                    >
+                      שמירת שולחן
+                    </a>
                     <a
                       className="btn btn-outline contact-cta"
                       href={WOLT_URL}

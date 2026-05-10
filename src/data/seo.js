@@ -19,7 +19,7 @@ export const DEFAULT_DESCRIPTION =
 export const DEFAULT_TITLE = `${SITE_BRAND_HE} · ${SITE_BRAND_EN} · דיזנגוף תל אביב`;
 
 /** תמונה ל־Open Graph (נתיב יחסי — מומר ל־URL מלא בדפדפן) */
-export const OG_IMAGE_PATH = "/logo-sachi.webp";
+export const OG_IMAGE_PATH = "/logo-sachi-opaque-backup.png";
 
 /**
  * כתובת האתר ל־canonical / OG / JSON-LD.
@@ -148,8 +148,8 @@ export function buildRestaurantJsonLd(baseUrl) {
     alternateName: [SITE_BRAND_EN, SITE_BRAND_HE],
     description: DEFAULT_DESCRIPTION,
     url: `${base}/`,
-    image: [`${base}/logo-sachi.webp`, `${base}/hero-bg.jpg`],
-    logo: `${base}/logo-sachi.webp`,
+    image: [`${base}/logo-sachi-opaque-backup.png`, `${base}/hero-bg.jpg`],
+    logo: `${base}/logo-sachi-opaque-backup.png`,
     telephone: PHONE_TEL,
     priceRange: "$$",
     servesCuisine: ["Japanese", "Sushi", "Ramen"],

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, matchPath, useLocation } from "react-router-dom";
-import { LOGO_SRC, navLinks, WOLT_URL } from "../data/siteContent.js";
+import { LOGO_SRC, navLinks, RESERVATION_URL, WOLT_URL } from "../data/siteContent.js";
 
 export function Header() {
   const { pathname } = useLocation();
@@ -95,6 +95,15 @@ export function Header() {
           <span />
           <span />
         </button>
+        <a
+          className="btn btn-outline btn-header btn-header-reserve"
+          href={RESERVATION_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="שמירת שולחן באונטופו"
+        >
+          שמירת שולחן
+        </a>
         <a
           className="btn btn-outline btn-header"
           href={WOLT_URL}

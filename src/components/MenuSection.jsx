@@ -176,6 +176,9 @@ export function MenuSection() {
         <MenuCategoryStickyNav />
         <p className="section-eyebrow">התפריט</p>
         <h2 className="section-title menu-section__title">תפריט מלא</h2>
+        <p className="menu-images-note" role="note">
+          התמונות להמחשה בלבד
+        </p>
         <p className="menu-allergen-note">
           <Link to="/allergens">
             הצהרת אלרגנים ורגישויות — חשוב לקרוא לפני הזמנה

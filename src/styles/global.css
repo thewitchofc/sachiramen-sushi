@@ -1748,6 +1748,14 @@ section[id] {
   margin-bottom: var(--space-sm);
 }
 
+.menu-images-note {
+  margin: calc(var(--space-sm) * -0.2) 0 var(--space-sm);
+  text-align: center;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: rgba(26, 26, 26, 0.62);
+}
+
 .section.menu-section.section--light {
   position: relative;
   overflow: clip;
@@ -3274,7 +3282,13 @@ section[id] {
 .contact-hours-cta-wrap {
   margin-top: clamp(0.5rem, 1.6vw, 0.85rem);
   display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
   justify-content: center;
+}
+
+.contact-cta--reserve {
+  background: rgba(255, 255, 255, 0.58);
 }
 
 .section.contact-section.section--dark .contact-cta {
@@ -3665,6 +3679,10 @@ section[id] {
     border-radius: var(--radius-md);
   }
 
+  .btn-header-reserve {
+    margin-inline-end: 0.35rem;
+  }
+
   .nav-list {
     position: static;
     display: flex;
@@ -4019,6 +4037,10 @@ section[id] {
     box-shadow: none;
   }
 
+  .btn-header-reserve {
+    display: none;
+  }
+
   .btn-header:active {
     transform: none;
     opacity: 0.94;
@@ -4150,7 +4172,7 @@ section[id] {
   }
 
   /* פחות עומס ב־Hero; וואטסאפ פחות דומיננטי (מיקום מעל סרגל הזמנה) */
-  .btn-hero-secondary {
+  .btn-hero-menu {
     display: none;
   }
 

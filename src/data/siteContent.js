@@ -32,6 +32,7 @@ export const brandVoice = {
 
 export const WOLT_URL =
   "https://wolt.com/he/isr/tel-aviv/restaurant/sachi-sushi-tlv";
+export const RESERVATION_URL = "https://ontopo.com/he/il/page/15658141";
 export const INSTAGRAM_URL = "https://www.instagram.com/sachi_ramen_sushi/";
 export const FACEBOOK_URL =
   "https://www.facebook.com/tlv.sachisushi/photos";
