@@ -48,7 +48,6 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Heebo:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap"
       rel="stylesheet"
     />
-    <link rel="preload" as="image" href="/hero-bg.jpg" />
     <link rel="preload" as="image" href="/logo-sachi.webp" type="image/webp" />
     <!-- GA4: סקריפטי gtag נוספים ל-head בזמן build כשהוגדר VITE_GA_MEASUREMENT_ID (ראו vite.config.js) -->
     <style>
@@ -106,6 +105,115 @@
           filter: none;
         }
       }
+
+      /* Israeli-style accessibility floating button (no external libs) */
+      .isr-a11y-widget {
+        position: fixed;
+        left: max(14px, env(safe-area-inset-left, 0px));
+        bottom: max(14px, env(safe-area-inset-bottom, 0px));
+        z-index: 2147483000;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+        direction: rtl;
+      }
+
+      .isr-a11y-trigger {
+        width: 56px;
+        height: 56px;
+        border-radius: 999px;
+        border: 2px solid #ffffff;
+        background: #0b3d91;
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+      }
+
+      .isr-a11y-trigger:focus-visible,
+      .isr-a11y-panel button:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+      }
+
+      .isr-a11y-trigger svg {
+        width: 32px;
+        height: 32px;
+      }
+
+      .isr-a11y-panel {
+        width: min(92vw, 280px);
+        display: none;
+        background: #0b3d91;
+        color: #fff;
+        border: 2px solid #fff;
+        border-radius: 14px;
+        padding: 0.8rem;
+        box-shadow: 0 14px 30px rgba(0, 0, 0, 0.26);
+      }
+
+      .isr-a11y-panel.is-open {
+        display: block;
+      }
+
+      .isr-a11y-title {
+        margin: 0 0 0.6rem;
+        font-size: 0.96rem;
+        font-weight: 700;
+      }
+
+      .isr-a11y-actions {
+        display: grid;
+        gap: 0.5rem;
+      }
+
+      .isr-a11y-actions button {
+        width: 100%;
+        min-height: 2.35rem;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .isr-a11y-actions button[aria-pressed="true"] {
+        background: #fff;
+        color: #0b3d91;
+      }
+
+      html.isr-a11y-text-large {
+        font-size: 112% !important;
+      }
+
+      html.isr-a11y-contrast {
+        filter: contrast(1.22) saturate(1.05);
+      }
+
+      html.isr-a11y-links a {
+        text-decoration: underline !important;
+        text-decoration-thickness: 2px !important;
+        text-underline-offset: 3px !important;
+        background: rgba(255, 255, 0, 0.18) !important;
+      }
+
+      @media (max-width: 768px) {
+        .isr-a11y-trigger {
+          width: 52px;
+          height: 52px;
+        }
+
+        .isr-a11y-panel {
+          width: min(92vw, 250px);
+          padding: 0.7rem;
+        }
+      }
+
     </style>
   </head>
   <body>
@@ -131,7 +239,123 @@
         />
       </picture>
     </div>
+    <div class="isr-a11y-widget" dir="rtl">
+      <button
+        id="isr-a11y-trigger"
+        type="button"
+        class="isr-a11y-trigger"
+        aria-label="פתח תפריט נגישות"
+        aria-expanded="false"
+        aria-controls="isr-a11y-panel"
+      >
+        <svg viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+          <path
+            d="M512 256c0 141.4-114.6 256-256 256S0 397.4 0 256S114.6 0 256 0S512 114.6 512 256z"
+            fill="#fff"
+          ></path>
+          <path
+            d="M161.5 169.9c-12.2-5.2-26.3 .4-31.5 12.6s.4 26.3 12.6 31.5l11.9 5.1c17.3 7.4 35.2 12.9 53.6 16.3v50.1c0 4.3-.7 8.6-2.1 12.6l-28.7 86.1c-4.2 12.6 2.6 26.2 15.2 30.4s26.2-2.6 30.4-15.2l24.4-73.2c1.3-3.8 4.8-6.4 8.8-6.4s7.6 2.6 8.8 6.4l24.4 73.2c4.2 12.6 17.8 19.4 30.4 15.2s19.4-17.8 15.2-30.4l-28.7-86.1c-1.4-4.1-2.1-8.3-2.1-12.6V235.5c18.4-3.5 36.3-8.9 53.6-16.3l11.9-5.1c12.2-5.2 17.8-19.3 12.6-31.5s-19.3-17.8-31.5-12.6L338.7 175c-26.1 11.2-54.2 17-82.7 17s-56.5-5.8-82.7-17l-11.9-5.1zM256 160c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40s17.9 40 40 40z"
+            fill="#2f3b52"
+          ></path>
+        </svg>
+      </button>
+
+      <section id="isr-a11y-panel" class="isr-a11y-panel" aria-label="אפשרויות נגישות">
+        <p class="isr-a11y-title">נגישות</p>
+        <div class="isr-a11y-actions">
+          <button type="button" id="isr-a11y-text" aria-pressed="false">הגדלת טקסט</button>
+          <button type="button" id="isr-a11y-contrast" aria-pressed="false">ניגודיות גבוהה</button>
+          <button type="button" id="isr-a11y-links" aria-pressed="false">הדגשת קישורים</button>
+          <button type="button" id="isr-a11y-reset">איפוס</button>
+        </div>
+      </section>
+    </div>
     <div id="root"></div>
+    <script>
+      (function () {
+        const STORAGE_KEY = "isr_a11y_widget_state_v1";
+        const root = document.documentElement;
+        const trigger = document.getElementById("isr-a11y-trigger");
+        const panel = document.getElementById("isr-a11y-panel");
+        const textBtn = document.getElementById("isr-a11y-text");
+        const contrastBtn = document.getElementById("isr-a11y-contrast");
+        const linksBtn = document.getElementById("isr-a11y-links");
+        const resetBtn = document.getElementById("isr-a11y-reset");
+
+        const state = { textLarge: false, highContrast: false, highlightLinks: false };
+
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            state.textLarge = Boolean(parsed.textLarge);
+            state.highContrast = Boolean(parsed.highContrast);
+            state.highlightLinks = Boolean(parsed.highlightLinks);
+          }
+        } catch {}
+
+        const save = () => {
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          } catch {}
+        };
+
+        const apply = () => {
+          root.classList.toggle("isr-a11y-text-large", state.textLarge);
+          root.classList.toggle("isr-a11y-contrast", state.highContrast);
+          root.classList.toggle("isr-a11y-links", state.highlightLinks);
+          textBtn.setAttribute("aria-pressed", String(state.textLarge));
+          contrastBtn.setAttribute("aria-pressed", String(state.highContrast));
+          linksBtn.setAttribute("aria-pressed", String(state.highlightLinks));
+          save();
+        };
+
+        const setOpen = (open) => {
+          panel.classList.toggle("is-open", open);
+          trigger.setAttribute("aria-expanded", String(open));
+          trigger.setAttribute("aria-label", open ? "סגור תפריט נגישות" : "פתח תפריט נגישות");
+        };
+
+        trigger.addEventListener("click", () => {
+          setOpen(!panel.classList.contains("is-open"));
+        });
+
+        textBtn.addEventListener("click", () => {
+          state.textLarge = !state.textLarge;
+          apply();
+        });
+
+        contrastBtn.addEventListener("click", () => {
+          state.highContrast = !state.highContrast;
+          apply();
+        });
+
+        linksBtn.addEventListener("click", () => {
+          state.highlightLinks = !state.highlightLinks;
+          apply();
+        });
+
+        resetBtn.addEventListener("click", () => {
+          state.textLarge = false;
+          state.highContrast = false;
+          state.highlightLinks = false;
+          apply();
+        });
+
+        document.addEventListener("click", (e) => {
+          const target = e.target;
+          if (!panel.classList.contains("is-open")) return;
+          if (panel.contains(target) || trigger.contains(target)) return;
+          setOpen(false);
+        });
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") setOpen(false);
+        });
+
+        apply();
+      })();
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

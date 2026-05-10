@@ -6,7 +6,6 @@ import {
   trackWhatsAppClick,
 } from "../analytics/gaEvents.js";
 import { trackGaPageView } from "../analytics/trackGaPageView.js";
-import { FloatingOrder } from "./FloatingOrder.jsx";
 import { Header } from "./Header.jsx";
 import { JsonLdRestaurant } from "./JsonLdRestaurant.jsx";
 import { SeoHead } from "./SeoHead.jsx";
@@ -82,7 +81,6 @@ export function Layout() {
       <Suspense fallback={null}>
         <Footer />
       </Suspense>
-      <FloatingOrder />
       {showWhatsappCat ? <WhatsappManeki /> : null}
     </>
   );

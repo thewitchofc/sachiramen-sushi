@@ -36,8 +36,12 @@ export function MenuCategoryStickyNav() {
   /** בזמן שהמשתמש גולל אופקית בסרגל — לא לבצע auto-scroll של הכפתור הפעיל */
   const userNavScrollingRef = useRef(false);
   const userNavScrollingTimeoutRef = useRef(null);
-  const pendingCategoryRef = useRef(null);
-  const ioRafRef = useRef(null);
+  const pendingActiveCategoryRef = useRef(null);
+  const pendingActiveTimeoutRef = useRef(null);
+  const lastActiveSetAtRef = useRef(0);
+  const lastTrackAutoScrollAtRef = useRef(0);
+  const pendingTrackScrollTimeoutRef = useRef(null);
+  const scrollSettleTimeoutRef = useRef(null);
 
   useEffect(() => {
     const el = trackRef.current;
@@ -68,63 +72,98 @@ export function MenuCategoryStickyNav() {
   }, []);
 
   useEffect(() => {
-    const sections = document.querySelectorAll("[data-category]");
-    const visibleRatios = new Map();
+    const sections = Array.from(document.querySelectorAll("[data-category]"));
+    if (!sections.length) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (ioSuspendedRef.current) return;
-        for (const entry of entries) {
-          const cat = entry.target.dataset.category;
-          if (cat == null || cat === "") continue;
-          const ratio = entry.intersectionRatio ?? 0;
-          if (entry.isIntersecting && ratio > 0) {
-            visibleRatios.set(cat, ratio);
-          } else {
-            visibleRatios.delete(cat);
-          }
+    let rafId = null;
+    const updateActiveCategory = () => {
+      if (ioSuspendedRef.current) return;
+
+      const headerEl = document.querySelector(".site-header");
+      const headerH = headerEl?.getBoundingClientRect().height ?? 72;
+      const navH = navRef.current?.offsetHeight ?? 52;
+      const markerY = headerH + navH + 10;
+
+      let nextCat = sections[0]?.dataset.category ?? null;
+      for (const section of sections) {
+        const cat = section.dataset.category;
+        if (!cat) continue;
+        const top = section.getBoundingClientRect().top;
+        if (top <= markerY) {
+          nextCat = cat;
+        } else {
+          break;
         }
-
-        let bestCat = null;
-        let bestRatio = 0;
-        for (const [cat, ratio] of visibleRatios.entries()) {
-          if (ratio >= bestRatio) {
-            bestRatio = ratio;
-            bestCat = cat;
-          }
-        }
-
-        if (!bestCat) return;
-        if (bestCat === activeCategoryRef.current) return;
-
-        pendingCategoryRef.current = bestCat;
-        if (ioRafRef.current != null) return;
-        ioRafRef.current = window.requestAnimationFrame(() => {
-          ioRafRef.current = null;
-          const next = pendingCategoryRef.current;
-          pendingCategoryRef.current = null;
-          if (!next) return;
-          if (ioSuspendedRef.current) return;
-          if (next === activeCategoryRef.current) return;
-          activeCategoryRef.current = next;
-          setActiveCategory(next);
-        });
-      },
-      {
-        rootMargin: "-40% 0px -50% 0px",
-        threshold: [0, 0.1, 0.25, 0.4, 0.55, 0.7],
       }
-    );
 
-    sections.forEach((section) => observer.observe(section));
+      if (!nextCat) return;
+      if (nextCat === activeCategoryRef.current) {
+        pendingActiveCategoryRef.current = null;
+        if (pendingActiveTimeoutRef.current != null) {
+          window.clearTimeout(pendingActiveTimeoutRef.current);
+          pendingActiveTimeoutRef.current = null;
+        }
+        return;
+      }
+
+      if (pendingActiveCategoryRef.current === nextCat) return;
+      pendingActiveCategoryRef.current = nextCat;
+      if (pendingActiveTimeoutRef.current != null) {
+        window.clearTimeout(pendingActiveTimeoutRef.current);
+      }
+      // Small stabilization window prevents flicker near section boundaries.
+      pendingActiveTimeoutRef.current = window.setTimeout(() => {
+        pendingActiveTimeoutRef.current = null;
+        const candidate = pendingActiveCategoryRef.current;
+        if (!candidate || ioSuspendedRef.current) return;
+        if (candidate === activeCategoryRef.current) return;
+        const now = performance.now();
+        // Prevent rapid back-and-forth updates while fast scrolling.
+        if (now - lastActiveSetAtRef.current < 220) return;
+        lastActiveSetAtRef.current = now;
+        activeCategoryRef.current = candidate;
+        setActiveCategory(candidate);
+      }, 120);
+    };
+
+    const onScrollOrResize = () => {
+      if (rafId != null) return;
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null;
+        updateActiveCategory();
+      });
+    };
+
+    const onScroll = () => {
+      // Update only after scrolling settles to avoid jitter on fast flicks.
+      if (scrollSettleTimeoutRef.current != null) {
+        window.clearTimeout(scrollSettleTimeoutRef.current);
+      }
+      scrollSettleTimeoutRef.current = window.setTimeout(() => {
+        scrollSettleTimeoutRef.current = null;
+        onScrollOrResize();
+      }, 170);
+    };
+
+    const onResize = () => {
+      onScrollOrResize();
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize);
+    onScrollOrResize();
 
     return () => {
-      observer.disconnect();
-      if (ioRafRef.current != null) {
-        window.cancelAnimationFrame(ioRafRef.current);
-        ioRafRef.current = null;
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+      if (rafId != null) window.cancelAnimationFrame(rafId);
+      if (pendingActiveTimeoutRef.current != null) {
+        window.clearTimeout(pendingActiveTimeoutRef.current);
       }
-      pendingCategoryRef.current = null;
+      if (scrollSettleTimeoutRef.current != null) {
+        window.clearTimeout(scrollSettleTimeoutRef.current);
+      }
+      pendingActiveCategoryRef.current = null;
     };
   }, []);
 
@@ -144,19 +183,40 @@ export function MenuCategoryStickyNav() {
     // active button is actually out of view.
     const trackRect = trackEl.getBoundingClientRect();
     const btnRect = activeBtn.getBoundingClientRect();
-    const pad = 20;
+    const pad = 24;
     const fullyVisible =
       btnRect.left >= trackRect.left + pad &&
       btnRect.right <= trackRect.right - pad;
     if (fullyVisible) return;
 
-    const maxLeft = trackEl.scrollWidth - trackEl.clientWidth;
-    if (maxLeft <= 0) return;
-    const targetLeft =
-      activeBtn.offsetLeft - trackEl.clientWidth / 2 + activeBtn.offsetWidth / 2;
-    const left = Math.max(0, Math.min(maxLeft, targetLeft));
-    trackEl.scrollTo({ left, behavior: "auto" });
+    const now = performance.now();
+    if (now - lastTrackAutoScrollAtRef.current < 420) return;
+    lastTrackAutoScrollAtRef.current = now;
+
+    if (pendingTrackScrollTimeoutRef.current != null) {
+      window.clearTimeout(pendingTrackScrollTimeoutRef.current);
+    }
+    // Delay a touch so rapid active changes settle before moving the track.
+    pendingTrackScrollTimeoutRef.current = window.setTimeout(() => {
+      pendingTrackScrollTimeoutRef.current = null;
+      const behavior = prefersReducedMotion() ? "auto" : "smooth";
+      // scrollIntoView handles RTL/LTR differences better than manual scrollLeft math.
+      activeBtn.scrollIntoView({
+        behavior,
+        inline: "nearest",
+        block: "nearest",
+      });
+    }, 140);
   }, [activeCategory]);
+
+  useEffect(
+    () => () => {
+      if (pendingTrackScrollTimeoutRef.current != null) {
+        window.clearTimeout(pendingTrackScrollTimeoutRef.current);
+      }
+    },
+    []
+  );
 
   const onCategoryClick = (index, categoryId) => {
     const id = categorySectionId(index);

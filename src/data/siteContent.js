@@ -20,9 +20,6 @@ export const DEVELOPER_CREDIT_URL = (viteDeveloperSite || DEVELOPER_CREDIT_SITE)
 export const heroTaglineHe =
   "משלוחים מהירים • גלם טרי • חוויה יפנית";
 
-/** תמונת רקע Hero — מגוון מנות (1024×682, רוחב מלא) */
-export const HERO_BG_SRC = "/hero-bg.jpg";
-
 /** משפטי מותג — Sachi */
 export const brandVoice = {
   hook: "Looks meow, tastes yammi!",
